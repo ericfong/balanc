@@ -1,0 +1,25 @@
+{
+  "name": "balanc",
+  "version": "1.0.0",
+  "description": "Easiest way to record orders, transactions, invoices, payments, receives",
+  "main": "lib/index.js",
+  "scripts": {
+    "version": "babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "author": "Eric Fong",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
+    "babel-preset-es2015": "^6.13.2"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
