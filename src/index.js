@@ -40,7 +40,7 @@ export class Balanc {
       text,
       data,
     }
-    this.fetch('transfer', {
+    return this.fetch('transfer', {
       method: 'POST',
       body,
     })
@@ -49,13 +49,23 @@ export class Balanc {
   fetch(pathname, option = {}) {
     const _opt = _.merge({
       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-       },
-     }, option, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }, option, {
       body: JSON.stringify(option.body),
     })
     return _fetch(`${BALANC_API}/${pathname}`, _opt)
+    .then(response => {
+      if (response.status >= 200 && response.status < 400) {
+        const contentType = response.headers.get('Content-Type')
+        return _.startsWith(contentType, 'application/json') ? response.json() : response
+      } else {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    })
   }
 }
 
