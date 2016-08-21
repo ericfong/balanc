@@ -1,61 +1,83 @@
+import querystring from 'querystring'
 import _ from 'lodash'
 import _fetch from 'isomorphic-fetch'
 
+import _package from '../package.json'
 
-const BALANC_API = process.env.BALANC_API || 'https://balanc.eddyy.com/v1'
 
-
-const defaults = {
+const defaultCtx = {
+  // env: 'development' | 'production',
   env: process.env.NODE_ENV,
+  apiUrl: process.env.BALANC_API || 'https://balanc.eddyy.com/v1',
+  libVersion: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
   domainEmail: undefined,
 
+  // NOTE individual customer or pos controller
+  // NOTE set permission
   userJwt: undefined,
+
+  // currency: 'HKD',
   currency: undefined,
 }
 
-const defFields = Object.keys(defaults)
+const ctxFields = Object.keys(defaultCtx)
 
 
 export class Balanc {
-  constructor() {
-    this._defaults = defaults
+  constructor(context) {
+    this._context = defaultCtx
+    this.setContext(context)
   }
 
-  defaults(defaults) {
-    this._defaults = _.pick(defaults, defFields)
+  setContext(context) {
+    _.assign(this._context, _.pick(context, ctxFields))
+    return this
   }
 
-  transfer(from, amount, to, {text, ...rest} = {}) {
-    const patchDefaults = _.pick(rest, defFields)
-    const data = _.omit(rest, defFields)
+  transfer({from, amount, to, text, ...data} = {}, context) {
     const body = {
-      ...this._defaults,
-      ...patchDefaults,
-
       from,
       amount,
       to,
       text,
       data,
     }
-    return this.fetch('transfer', {
-      method: 'POST',
-      body,
-    })
+    return this.fetch('transfer', body, {method: 'POST'}, context)
   }
 
-  fetch(pathname, option = {}) {
+  getAccount(body, context) {
+    return this.fetch('account', body, {method: 'GET'}, context)
+  }
+
+  fetch(pathname, body, option, context) {
+    const {env, apiUrl, ...apiFields} = {...this._context, ...context}
+    const {method} = option
+
     const _opt = _.merge({
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }, option, {
-      body: JSON.stringify(option.body),
-    })
-    return _fetch(`${BALANC_API}/${pathname}`, _opt)
+    }, option)
+
+    let query = ''
+    const json = {
+      ...body,
+      ...apiFields,
+    }
+    if (method === 'GET') {
+      query = '?' + querystring.stringify(json)
+    } else {
+      _opt.body = JSON.stringify(json)
+    }
+
+    if (env === 'production') {
+      // console.warn()
+    }
+
+    return _fetch(`${apiUrl}/${pathname}${query}`, _opt)
     .then(response => {
       if (response.status >= 200 && response.status < 400) {
         const contentType = response.headers.get('Content-Type')
