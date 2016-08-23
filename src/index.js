@@ -36,21 +36,6 @@ export class Balanc {
     return this
   }
 
-  transfer({from, amount, to, text, ...data} = {}, context) {
-    const body = {
-      from,
-      amount,
-      to,
-      text,
-      data,
-    }
-    return this.fetch('transfer', body, {method: 'POST'}, context)
-  }
-
-  getAccount(body, context) {
-    return this.fetch('account', body, {method: 'GET'}, context)
-  }
-
   fetch(pathname, body, option, context) {
     const {env, apiUrl, ...apiFields} = {...this._context, ...context}
     const {method} = option
@@ -90,6 +75,16 @@ export class Balanc {
     })
   }
 }
+
+function addMethod(funcName, httpUrl, httpMethod) {
+  Balanc.prototype[funcName] = function(body, context) {
+    return this.fetch(httpUrl, body, {method: httpMethod}, context)
+  }
+}
+
+addMethod('transfer', 'transfer', 'POST')
+addMethod('getTransfers', 'transfer', 'GET')
+addMethod('getAccount', 'account', 'GET')
 
 
 export default new Balanc()
