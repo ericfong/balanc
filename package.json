@@ -1,7 +1,7 @@
 {
   "name": "balanc",
-  "version": "1.0.0",
-  "description": "Easiest way to record orders, transactions, invoices, payments, receives",
+  "version": "0.0.1",
+  "description": "Scalable and ACID system to offload transfers and accounting storage from your system",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
