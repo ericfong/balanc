@@ -1,6 +1,6 @@
 {
   "name": "balanc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Scalable and ACID system to offload transfers and accounting storage from your system",
   "main": "lib/index.js",
   "scripts": {
