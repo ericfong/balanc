@@ -2,7 +2,7 @@ balanc
 ======
 Scalable and ACID system to offload transfers and accounting storage from your system
 
-State: development
+<b>State: development. Using service from http://eddyy.com</b>
 
 
 Why use?
