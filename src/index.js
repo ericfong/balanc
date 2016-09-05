@@ -8,7 +8,7 @@ import _package from '../package.json'
 const defaultCtx = {
   // env: 'development' | 'production',
   env: process.env.NODE_ENV,
-  apiUrl: process.env.BALANC_API || 'https://balanc.eddyy.com/v1',
+  apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
   libVersion: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
