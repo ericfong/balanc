@@ -1,0 +1,6 @@
+{
+  "styles": {
+    "website": "docs/style.css"
+  },
+  "plugins": ["autosize-iframe"]
+}

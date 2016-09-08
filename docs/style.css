@@ -1,0 +1,9 @@
+.gitbook-link {
+  display: none !important;
+}
+
+.book-body iframe {
+  border: none;
+  padding: 0;
+  width: 100%;
+}
