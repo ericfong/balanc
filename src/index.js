@@ -82,8 +82,8 @@ function addMethod(funcName, httpUrl, httpMethod) {
   }
 }
 
-addMethod('exchange', 'exchange', 'POST')
-addMethod('getExchanges', 'exchange', 'GET')
+addMethod('transfer', 'transfer', 'POST')
+addMethod('getTransfers', 'transfer', 'GET')
 addMethod('getAccount', 'account', 'GET')
 
 
