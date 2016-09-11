@@ -6,7 +6,6 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "start:gitbook": "gitbook serve",
-    "start:webpack": "cd demo; webpack-dev-server",
     "start": "run-p start:*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,7 +18,8 @@
   "author": "Eric Fong",
   "license": "ISC",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.15.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
@@ -29,7 +29,7 @@
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-stage-0": "^6.5.0",
     "css-loader": "^0.25.0",
-    "eslint": "^3.4.0",
+    "eslint": "^3.5.0",
     "eslint-config-airbnb": "^11.0.0",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-import": "^1.14.0",

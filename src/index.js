@@ -82,9 +82,9 @@ function addMethod(funcName, httpUrl, httpMethod) {
   }
 }
 
-addMethod('transfer', 'transfer', 'POST')
-addMethod('getTransfers', 'transfer', 'GET')
-addMethod('getAccount', 'account', 'GET')
+addMethod('exchange', 'exchange', 'POST')
+addMethod('getExchanges', 'exchange', 'GET')
+addMethod('getBalance', 'account', 'GET')
 
 
 export default new Balanc()

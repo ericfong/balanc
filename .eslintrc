@@ -1,11 +1,8 @@
 {
-  "extends": "airbnb",
-  "plugins": [
-    "babel",
-    "lodash",
-    "mocha",
-    "react",
-  ],
+  "extends": ["eslint:recommended"],
+  "plugins": ["import", "babel", "lodash", "mocha"],
+  "//extends": "airbnb",
+  "//plugins": ["babel", "lodash", "mocha", "react"],
   "rules": {
     "react/prop-types": 0,
     semi: [1, 'never'],
@@ -20,7 +17,7 @@
     "import/named": 2,
     "import/default": 2,
     "import/export": 2,
-    "import/newline-after-import": "warn",    
+    "import/newline-after-import": "warn",
     "no-trailing-spaces": 1
   },
   "settings": {
