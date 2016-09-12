@@ -6,8 +6,6 @@ import _package from '../package.json'
 
 
 const defaultCtx = {
-  // env: 'development' | 'production',
-  env: process.env.NODE_ENV,
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
   libVersion: _package.version,
 
@@ -34,7 +32,7 @@ export class Balanc {
   }
 
   fetch(pathname, body, option, context) {
-    const {env, apiUrl, ...apiFields} = {...this._context, ...context}
+    const {apiUrl, ...apiFields} = {...this._context, ...context}
     const {method} = option
 
     const _opt = _.merge({
@@ -49,17 +47,19 @@ export class Balanc {
       ...body,
       ...apiFields,
     }
-    if (method === 'GET') {
+    if (method === 'GET' || method === 'GET_URL') {
       query = '?' + querystring.stringify(json)
     } else {
       _opt.body = JSON.stringify(json)
     }
 
-    if (env === 'production') {
-      // console.warn()
+    const url = `${apiUrl}/${pathname}${query}`
+
+    if (method === 'GET_URL') {
+      return url
     }
 
-    return _fetch(`${apiUrl}/${pathname}${query}`, _opt)
+    return _fetch(url, _opt)
     .then(response => {
       if (response.status >= 200 && response.status < 400) {
         const contentType = response.headers.get('Content-Type')
@@ -73,16 +73,16 @@ export class Balanc {
   }
 }
 
-function addMethod(funcName, httpMethod, httpUrl) {
+function addMethod(funcName, httpUrl, option) {
   Balanc.prototype[funcName] = function(body, context) {
-    return this.fetch(httpUrl, body, {method: httpMethod}, context)
+    return this.fetch(httpUrl, body, option, context)
   }
 }
 
-addMethod('transfer', 'POST', 'transfer')
-addMethod('getTransfers', 'GET', 'transfer')
-addMethod('getAccount', 'GET', 'account')
-addMethod('getInvoice', 'GET', 'invoice')
+addMethod('transfer', 'transfer', {method: 'POST'})
+addMethod('getTransfers', 'transfer', {method: 'GET'})
+addMethod('getAccount', 'account', {method: 'GET'})
+addMethod('getInvoice', 'invoice', {method: 'GET'})
 
 
 export default new Balanc()

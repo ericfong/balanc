@@ -24,20 +24,31 @@ async function run() {
     ],
   })
 
-  const pdfUrl = await balanc.getInvoice({account: 'user-123', output: 'pdf_url'})
-  console.log(pdfUrl)
+  const pdfRes = await balanc.getInvoice({account: 'user-123'})
+  const pdfUrl = URL.createObjectURL(await pdfRes.blob())
+  return pdfUrl
 }
 
 
 class App extends Component {
+  state = {}
   render() {
+    const {pdfUrl} = this.state
     return (
       <div style={{ margin: '16px auto', maxWidth: 700 }}>
         <RaisedButton
           label="Run"
-          onTouchTap={run}
+          onTouchTap={async () => {
+            this.setState({ pdfUrl: await run() })
+          }}
           primary
           fullWidth
+          />
+
+        <iframe
+          src={pdfUrl}
+          seamless
+          width="100%"
           />
       </div>
     )
