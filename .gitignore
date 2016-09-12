@@ -1,5 +1,7 @@
-/node_modules/
+node_modules
 *.log
+tmp-*
+*-tmp.*
 
 /lib/
 /_book/

@@ -12,14 +12,11 @@ const defaultCtx = {
   libVersion: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
-  domainEmail: undefined,
+  // apiKey: 'signed key from server',
 
   // NOTE individual customer or pos controller
   // NOTE set permission
-  userJwt: undefined,
-
-  // currency: 'HKD',
-  currency: undefined,
+  // userJwt: undefined,
 }
 
 const ctxFields = Object.keys(defaultCtx)
@@ -76,15 +73,16 @@ export class Balanc {
   }
 }
 
-function addMethod(funcName, httpUrl, httpMethod) {
+function addMethod(funcName, httpMethod, httpUrl) {
   Balanc.prototype[funcName] = function(body, context) {
     return this.fetch(httpUrl, body, {method: httpMethod}, context)
   }
 }
 
-addMethod('transfer', 'transfer', 'POST')
-addMethod('getTransfers', 'transfer', 'GET')
-addMethod('getAccount', 'account', 'GET')
+addMethod('transfer', 'POST', 'transfer')
+addMethod('getTransfers', 'GET', 'transfer')
+addMethod('getAccount', 'GET', 'account')
+addMethod('getInvoice', 'GET', 'invoice')
 
 
 export default new Balanc()
