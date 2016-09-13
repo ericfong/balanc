@@ -10,13 +10,8 @@ const defaultCtx = {
   libVersion: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
-  // apiKey: 'signed key from server',
-
-  // NOTE individual customer or pos controller
-  // NOTE set permission
-  // userJwt: undefined,
+  domainKey: '', // 'signed key from server',
 }
-
 const ctxFields = Object.keys(defaultCtx)
 
 
@@ -31,17 +26,18 @@ export class Balanc {
     return this
   }
 
-  fetch(pathname, body, option) {
-    const {apiUrl, ...contextData} = this._context
+  fetch(pathname, data, option) {
+    const {apiUrl, libVersion, ...contextData} = this._context
     const method = option.method ? option.method.toUpperCase() : 'GET'
 
     // merge default option
     _.set(option, ['headers', 'Content-Type'], 'application/json')
     option.headers['Accept'] = option.accept || 'application/json'
+    option.headers['X-Lib-Ver'] = libVersion
 
     let query = ''
     const json = {
-      ...body,
+      ...data,
       ...contextData,
     }
     if (method === 'GET' || method === 'HEAD') {
@@ -52,7 +48,7 @@ export class Balanc {
 
     const url = `${apiUrl}/${pathname}${query}`
 
-    if (option.output === 'url') {
+    if (method === 'GET' && data && data.$out === 'url') {
       return url
     }
 
@@ -71,15 +67,15 @@ export class Balanc {
 }
 
 function addMethod(funcName, httpUrl, methodOption) {
-  Balanc.prototype[funcName] = function(body, option) {
-    return this.fetch(httpUrl, body, option ? {...methodOption, ...option} : methodOption)
+  Balanc.prototype[funcName] = function(body) {
+    return this.fetch(httpUrl, body, methodOption)
   }
 }
 
 addMethod('transfer', 'transfer', {method: 'POST'})
-addMethod('getTransfers', 'transfer', {method: 'GET'})
-addMethod('getAccount', 'account', {method: 'GET'})
-addMethod('getInvoice', 'invoice', {method: 'GET'})
+addMethod('getBalance', 'balance', {method: 'GET'})
+// addMethod('getTransfers', 'transfer', {method: 'GET'})
+// addMethod('getInvoice', 'invoice', {method: 'GET'})
 
 
 export default new Balanc()
