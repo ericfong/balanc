@@ -31,35 +31,32 @@ export class Balanc {
     return this
   }
 
-  fetch(pathname, body, option, context) {
-    const {apiUrl, ...apiFields} = {...this._context, ...context}
-    const {method} = option
+  fetch(pathname, body, option) {
+    const {apiUrl, ...contextData} = this._context
+    const method = option.method ? option.method.toUpperCase() : 'GET'
 
-    const _opt = _.merge({
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }, option)
+    // merge default option
+    _.set(option, ['headers', 'Content-Type'], 'application/json')
+    option.headers['Accept'] = option.accept || 'application/json'
 
     let query = ''
     const json = {
       ...body,
-      ...apiFields,
+      ...contextData,
     }
-    if (method === 'GET' || method === 'GET_URL') {
+    if (method === 'GET' || method === 'HEAD') {
       query = '?' + querystring.stringify(json)
     } else {
-      _opt.body = JSON.stringify(json)
+      option.body = JSON.stringify(json)
     }
 
     const url = `${apiUrl}/${pathname}${query}`
 
-    if (method === 'GET_URL') {
+    if (option.output === 'url') {
       return url
     }
 
-    return _fetch(url, _opt)
+    return _fetch(url, option)
     .then(response => {
       if (response.status >= 200 && response.status < 400) {
         const contentType = response.headers.get('Content-Type')
@@ -73,9 +70,9 @@ export class Balanc {
   }
 }
 
-function addMethod(funcName, httpUrl, option) {
-  Balanc.prototype[funcName] = function(body, context) {
-    return this.fetch(httpUrl, body, option, context)
+function addMethod(funcName, httpUrl, methodOption) {
+  Balanc.prototype[funcName] = function(body, option) {
+    return this.fetch(httpUrl, body, option ? {...methodOption, ...option} : methodOption)
   }
 }
 
