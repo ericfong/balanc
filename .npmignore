@@ -1,0 +1,7 @@
+node_modules
+*.log
+tmp-*
+*-tmp.*
+
+/src/
+/_book/

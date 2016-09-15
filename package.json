@@ -4,9 +4,8 @@
   "description": "Scalable and ACID system to offload transfers and accounting storage from your system",
   "main": "lib/index.js",
   "scripts": {
-    "build:src": "babel src --out-dir lib",
+    "prepublish": "babel src --out-dir lib",
     "publish:doc": "gitbook build && cd _book && git init && git commit --allow-empty -m doc && git checkout -b gh-pages && git add . && git commit -am doc && git push https://github.com/ericfong/balanc.git gh-pages --force",
-    "build": "run-s build:*",
     "start:gitbook": "gitbook serve",
     "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
     "start": "run-p start:*"
