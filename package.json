@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build:src": "babel src --out-dir lib",
-    "build:gitbook": "gitbook build",
+    "publish:doc": "gitbook build && cd _book && git init && git commit --allow-empty -m doc && git checkout -b gh-pages && git add . && git commit -am doc && git push https://github.com/ericfong/balanc.git gh-pages --force",
     "build": "run-s build:*",
     "start:gitbook": "gitbook serve",
     "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
