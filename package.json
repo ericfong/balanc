@@ -4,7 +4,9 @@
   "description": "Scalable and ACID system to offload transfers and accounting storage from your system",
   "main": "lib/index.js",
   "scripts": {
-    "build": "babel src --out-dir lib",
+    "build:src": "babel src --out-dir lib",
+    "build:gitbook": "gitbook build",
+    "build": "run-s build:*",
     "start:gitbook": "gitbook serve",
     "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
     "start": "run-p start:*"
@@ -38,6 +40,7 @@
     "eslint-plugin-import": "^1.14.0",
     "eslint-plugin-lodash": "^1.10.3",
     "eslint-plugin-react": "^6.2.0",
+    "gitbook-cli": "^2.3.0",
     "html-webpack-plugin": "^2.22.0",
     "json-loader": "^0.5.4",
     "material-ui": "^0.15.4",
