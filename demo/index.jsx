@@ -1,68 +1,51 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import injectTapEventPlugin from 'react-tap-event-plugin'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import RaisedButton from 'material-ui/RaisedButton'
 
 import balanc from '../src'
 
 
-async function run() {
-  balanc.setContext({domainEmail: 'billing@your-company.com'})
-
-  await balanc.transfer({
-    from: 'user-123',
-    to: 'billing@your-company.com',
-    unit: 'HKD',
-    amount: 100,
-    gains: [
-      {
-        unit: 'Monthly Gym Membership',
-        amount: 2, // two months
-      },
-    ],
+(async () => {
+  balanc.setContext({
+    domain: 'your-company.com',
   })
 
-  const pdfRes = await balanc.getInvoice({account: 'user-123'})
+  const pdfRes = await balanc.transfer({
+    from: 'billing@your-company.com',
+    to: 'user-123',
+    outputs: [
+      {
+        quantity: 2, // two months implied by item string
+        item: 'Monthly Gym Membership',
+        price: 100,
+      },
+    ],
+    inputs: [
+      {
+        item: 'Cash',
+        price: 100,
+      },
+    ],
+    $out: 'receipt_pdf',
+  })
   const pdfUrl = URL.createObjectURL(await pdfRes.blob())
-  return pdfUrl
-}
 
 
-class App extends Component {
-  state = {}
-  render() {
-    const {pdfUrl} = this.state
-    return (
-      <div style={{ margin: '16px auto', maxWidth: 700 }}>
-        <RaisedButton
-          label="Run"
-          onTouchTap={async () => {
-            this.setState({ pdfUrl: await run() })
-          }}
-          primary
-          fullWidth
-          />
+  // json is ready and then getInvoice / Receive of from and to
+  // const pdfUrl = balanc.getBalance({account: 'user-123', unit: 'USD', $out: 'url'})
+  // const receivePdfUrl = balanc.getReceive({
+  //   from: 'billing@your-company.com',
+  //   to: 'user-123',
+  //   unit: 'USD',
+  // })
 
-        <iframe
-          src={pdfUrl}
-          seamless
-          width="100%"
-          />
-      </div>
-    )
-  }
-}
-
-
-
-
-(async () => {
-  injectTapEventPlugin()
   ReactDOM.render((
-    <MuiThemeProvider muiTheme={getMuiTheme()}>
-      <App />
-    </MuiThemeProvider>
+    <div>
+      <iframe
+        src={pdfUrl}
+        seamless
+        width="100%"
+        height="700px"
+        />
+    </div>
   ), document.getElementById('app'))
 })()

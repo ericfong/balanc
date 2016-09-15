@@ -1,4 +1,4 @@
 # Summary
 
 * [Introduction](README.md)
-* [Demo](docs/demo.md)
+* [Demo](doc/demo.md)

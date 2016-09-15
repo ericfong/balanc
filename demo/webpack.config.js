@@ -2,7 +2,10 @@ const Path = require('path')
 const webpack = require('webpack')  // eslint-disable-line
 const HtmlWebpackPlugin = require('html-webpack-plugin')  // eslint-disable-line
 
-module.exports = () => {
+module.exports = (env) => {
+  const isProduction = env && env.production
+  console.log('isProduction', isProduction)
+
   const conf = {
     context: __dirname,
     entry: {
@@ -11,8 +14,8 @@ module.exports = () => {
 
     output: {
       filename: '[name].bundle.js',
-      path: Path.join(__dirname, '/dist'),
-      publicPath: '/',
+      path: Path.join(__dirname, '../_book/demo'),
+      // publicPath: '/',
     },
 
     module: {
