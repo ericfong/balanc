@@ -12,14 +12,14 @@ import balanc from '../src'
   const pdfRes = await balanc.transfer({
     from: 'billing@your-company.com',
     to: 'user-123',
-    outputs: [
+    gives: [
       {
         quantity: 2, // two months implied by item string
         item: 'Monthly Gym Membership',
         price: 100,
       },
     ],
-    inputs: [
+    takes: [
       {
         item: 'Cash',
         price: 100,

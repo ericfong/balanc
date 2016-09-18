@@ -3,8 +3,8 @@ const webpack = require('webpack')  // eslint-disable-line
 const HtmlWebpackPlugin = require('html-webpack-plugin')  // eslint-disable-line
 
 module.exports = (env) => {
-  const isProduction = env && env.production
-  console.log('isProduction', isProduction)
+  console.log('env', env) // eslint-disable-line
+  Object.assign(process.env, env)
 
   const conf = {
     context: __dirname,
