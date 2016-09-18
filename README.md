@@ -12,6 +12,9 @@ if you are using NoSQL, balanc can replace traditional lock and transaction requ
 if you are using SQL, balanc can solve the scale and storage problem
 
 
+<b><a href="../demo/index.html">Demo</a></b>
+
+
 API
 ---
 ```

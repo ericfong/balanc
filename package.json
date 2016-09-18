@@ -8,8 +8,8 @@
     "publish:doc": "gitbook build && npm run build:demo && cd _book && git init && git commit --allow-empty -m doc && git checkout -b gh-pages && git add . && git commit -am doc && git push https://github.com/ericfong/balanc.git gh-pages --force",
     "build:gitbook": "gitbook build",
     "start:gitbook": "gitbook serve",
-    "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production --env.BALANC_API=http://localhost:8000/v1",
-    "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
+    "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production",
+    "start:demo": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:8000/v1",
     "start": "run-p start:*"
   },
   "babel": {
