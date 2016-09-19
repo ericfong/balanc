@@ -1,8 +1,11 @@
 balanc
 ======
-Scalable and ACID system to offload transfers and accounting storage from your system
 
-<b>State: development. Using service from http://eddyy.com</b>
+Managed Cloud DB for Sale, Inventory and Billings
+
+which can offload transactions, receipt PDFs from your system
+
+**State: Development. Using service from http://eddyy.com**
 
 
 Why use?
@@ -12,7 +15,7 @@ if you are using NoSQL, balanc can replace traditional lock and transaction requ
 if you are using SQL, balanc can solve the scale and storage problem
 
 
-<b><a href="../demo/index.html">Demo</a></b>
+**[Demo](./demo/index.html)**
 
 
 API
@@ -20,39 +23,31 @@ API
 ```
 import balanc from 'balanc'
 
-async () => {
 
-  // default values for following calls
-  balanc.setContext({
-    domain: 'your-company.com',
-    domainEmail: 'billing@your-company.com',
-  })
+balanc.setContext({
+  domain: 'your-company.com',
+})
 
+const response = await balanc.transact({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+  gives: [
+    {
+      quantity: 2, // two months implied by item string
+      item: 'Monthly Gym Membership',
+      price: 100,
+    },
+  ],
+  takes: [
+    {
+      item: 'Cash',
+      price: 100,
+    },
+  ],
+  $out: 'receipt_pdf',
+})
+const receiptPdfBlob = response.blob()
 
-  // user-123 deposit $10 into his/her account
-  await balanc.transfer({
-    from: 'CASH_DEPOSIT',
-    to: 'user-123',
-    amount: 10,
-  })
-
-  // transfer $10 from user-123 to your-company
-  await balanc.transfer({
-    from: 'user-123',
-    to: 'your-company',
-    amount: 10,
-    text: 'Book ABC',
-  })
-
-  // get account balance
-  const account = await balanc.getAccount({account: 'user-123'})
-  should(account.balance).be.equal(0)
-
-  // get all transfers for user-123
-  const transfers = await balanc.getTransfers({account: 'user-123'})
-  should(transfers.length).be.equal(2)
-
-}
 ```
 
 

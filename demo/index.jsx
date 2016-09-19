@@ -5,11 +5,13 @@ import balanc from '../src'
 
 
 (async () => {
+
+  // EXTRACT TO README.md
   balanc.setContext({
     domain: 'your-company.com',
   })
 
-  const pdfRes = await balanc.transfer({
+  const response = await balanc.transact({
     from: 'billing@your-company.com',
     to: 'user-123',
     gives: [
@@ -27,21 +29,15 @@ import balanc from '../src'
     ],
     $out: 'receipt_pdf',
   })
-  const pdfUrl = URL.createObjectURL(await pdfRes.blob())
+  const receiptPdfBlob = response.blob()
+  // END OF EXTRACT TO README.md
 
-
-  // json is ready and then getInvoice / Receive of from and to
-  // const pdfUrl = balanc.getBalance({account: 'user-123', unit: 'USD', $out: 'url'})
-  // const receivePdfUrl = balanc.getReceive({
-  //   from: 'billing@your-company.com',
-  //   to: 'user-123',
-  //   unit: 'USD',
-  // })
+  const receiptUrl = URL.createObjectURL(await receiptPdfBlob)
 
   ReactDOM.render((
     <div>
       <iframe
-        src={pdfUrl}
+        src={receiptUrl}
         seamless
         width="100%"
         height="700px"

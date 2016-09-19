@@ -48,7 +48,7 @@ module.exports = (env) => {
 
     devtool: 'eval',
     devServer: {
-      port: 5432,
+      port: 7000,
       stats: { colors: true, chunks: false },
     },
   }

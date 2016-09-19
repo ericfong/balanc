@@ -1,7 +1,7 @@
 {
   "name": "balanc",
+  "description": "Managed Cloud DB for Sale, Inventory and Billings",
   "version": "0.0.4",
-  "description": "Scalable and ACID system to offload transfers and accounting storage from your system",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "babel src --out-dir lib",
@@ -9,8 +9,7 @@
     "build:gitbook": "gitbook build",
     "start:gitbook": "gitbook serve",
     "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production",
-    "start:demo": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:8000/v1",
-    "start": "run-p start:*"
+    "start": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:8000/v1"
   },
   "babel": {
     "presets": [

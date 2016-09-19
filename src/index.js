@@ -48,7 +48,7 @@ export class Balanc {
 
     const url = `${apiUrl}/${pathname}${query}`
 
-    if (method === 'GET' && data && data.$out === 'url') {
+    if (method === 'GET' && (option.$out === 'url' || (data && data.$out === 'url'))) {
       return url
     }
 
@@ -72,10 +72,10 @@ function addMethod(funcName, httpUrl, methodOption) {
   }
 }
 
-addMethod('transfer', 'transfer', {method: 'POST'})
+addMethod('transact', 'transaction', {method: 'POST'})
+addMethod('getTransfers', 'transfer', {method: 'GET'})
+addMethod('getReceiptUrl', 'receipt', {method: 'GET', $out: 'url'})
 addMethod('getBalance', 'balance', {method: 'GET'})
-// addMethod('getTransfers', 'transfer', {method: 'GET'})
-// addMethod('getInvoice', 'invoice', {method: 'GET'})
 
 
 export default new Balanc()
