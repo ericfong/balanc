@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.15.0"
+    "lodash": "^4.16.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
@@ -29,17 +29,17 @@
     "css-loader": "^0.25.0",
     "eslint": "^3.5.0",
     "eslint-plugin-babel": "^3.3.0",
-    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-import": "^1.15.0",
     "eslint-plugin-lodash": "^1.10.3",
-    "eslint-plugin-react": "^6.2.0",
+    "eslint-plugin-react": "^6.3.0",
     "gitbook-cli": "^2.3.0",
     "html-webpack-plugin": "^2.22.0",
     "json-loader": "^0.5.4",
     "material-ui": "^0.15.4",
     "mocha": "^3.0.2",
     "npm-run-all": "^3.1.0",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "style-loader": "^0.13.1",
     "webpack": "^2.1.0-beta.22",
     "webpack-dev-server": "^2.1.0-beta.4"
@@ -58,7 +58,6 @@
     "inventory"
   ],
   "author": "Eric Fong",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ericfong/balanc/issues"
   },

@@ -1,21 +1,27 @@
 balanc
 ======
 
-Managed Cloud DB for Sale, Inventory and Billings
-
-which can offload transactions, receipt PDFs from your system
-
-**State: Development. Using service from http://eddyy.com**
+Modern accounting (receipts, billings, pdf storage ...) toolchain and managed service. Making accounting easy and always balance.
 
 
-Why use?
---------
-if you are using NoSQL, balanc can replace traditional lock and transaction required operations for orders, invoices, receives and payments
+[![npm](https://img.shields.io/npm/dt/balanc.svg?maxAge=2592000?style=flat-square)]()
+[![npm](https://img.shields.io/npm/v/balanc.svg)]()
+[![state](https://img.shields.io/badge/state-development-orange.svg)]()
+[![npm](https://img.shields.io/npm/l/balanc.svg)]()
 
-if you are using SQL, balanc can solve the scale and storage problem
+[![NPM](https://nodei.co/npm-dl/balanc.png?months=1)](https://nodei.co/npm/balanc/)
 
 
-**[Demo](https://ericfong.github.io/balanc/demo/index.html)**
+
+Why
+---
+- if you are using NoSQL, balanc can replace traditional lock and transaction required operations for orders, invoices, receives and payments
+- if you are using SQL, balanc can solve the scale and storage problem
+
+
+
+#### [Demo](https://ericfong.github.io/balanc/demo/index.html)
+
 
 
 API
@@ -51,10 +57,13 @@ const receiptPdfBlob = response.blob()
 ```
 
 
-How?
-----
+
+How
+---
+- Based on http://eddyy.com
 - Record transfer as log and use job queue to resolve the transaction and locking problem
 - Create balance record monthly and daily for fast read
+
 
 
 Inspired by
