@@ -20,7 +20,7 @@ if you are using SQL, balanc can solve the scale and storage problem
 
 API
 ---
-```
+```js
 import balanc from 'balanc'
 
 

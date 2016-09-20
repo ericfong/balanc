@@ -11,14 +11,6 @@
     "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production",
     "start": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:8000/v1"
   },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ]
-  },
-  "author": "Eric Fong",
-  "license": "ISC",
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.15.0"
@@ -48,9 +40,27 @@
     "npm-run-all": "^3.1.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
-    "react-tap-event-plugin": "^1.0.0",
     "style-loader": "^0.13.1",
     "webpack": "^2.1.0-beta.22",
     "webpack-dev-server": "^2.1.0-beta.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericfong/balanc.git"
+  },
+  "keywords": [
+    "cloud",
+    "database",
+    "sale",
+    "receipt",
+    "invoice",
+    "billings",
+    "inventory"
+  ],
+  "author": "Eric Fong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericfong/balanc/issues"
+  },
+  "homepage": "https://github.com/ericfong/balanc#readme"
 }
