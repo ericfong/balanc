@@ -1,6 +1,6 @@
 {
   "name": "balanc",
-  "description": "Managed Cloud DB for Sale, Inventory and Billings",
+  "description": "Modern accounting (receipts, billings, pdf storage ...) toolchain and managed service",
   "version": "0.0.8",
   "main": "lib/index.js",
   "scripts": {
