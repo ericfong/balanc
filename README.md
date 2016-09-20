@@ -20,7 +20,9 @@ Why
 
 
 
-#### [Demo](https://ericfong.github.io/balanc/demo/index.html)
+Demo
+----
+[Basic Receipt Pdf Demo](https://ericfong.github.io/balanc/demo/index.html)
 
 
 
