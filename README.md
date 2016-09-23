@@ -28,6 +28,8 @@ Demo
 
 API
 ---
+
+##### Set Context
 ```js
 import balanc from 'balanc'
 
@@ -35,7 +37,11 @@ import balanc from 'balanc'
 balanc.setContext({
   domain: 'your-company.com',
 })
+```
 
+Â
+##### Record transaction
+```js
 const exchange = await balanc.exchange({
   from: 'billing@your-company.com',
   to: 'user-123',
@@ -63,13 +69,6 @@ balanc.getReceipt(exchange).download()
 
 ```
 
-
-
-How
----
-- Based on http://eddyy.com
-- Record transfer as log and use job queue to resolve the transaction and locking problem
-- Create balance record monthly and daily for fast read
 
 #### Issue Invoice
 ```js
@@ -119,6 +118,9 @@ const excelUrl = balanc.accountExcelUrl({
 ```
 
 
-Inspired by
------------
-- https://dzone.com/articles/how-implement-robust-and
+How
+---
+- Based on http://eddyy.com
+- Record transfer as log and use job queue to resolve the transaction and locking problem
+- Create balance record monthly and daily for fast read
+- Inspired by https://dzone.com/articles/how-implement-robust-and
