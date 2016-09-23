@@ -36,25 +36,30 @@ balanc.setContext({
   domain: 'your-company.com',
 })
 
-const response = await balanc.transact({
+const exchange = await balanc.exchange({
   from: 'billing@your-company.com',
   to: 'user-123',
   gives: [
     {
       quantity: 2, // two months implied by item string
       item: 'Monthly Gym Membership',
-      price: 100,
+      price: 100, // sub-total price of 2 monthly Gym
+      // deliveredAt: new Date(),
     },
   ],
   takes: [
     {
       item: 'Cash',
       price: 100,
+      // isPending: true,
     },
   ],
-  $out: 'receipt_pdf',
+  // isPreview: true,
 })
-const receiptPdfBlob = response.blob()
+
+balanc.getReceipt(exchange).open()
+// or
+balanc.getReceipt(exchange).download()
 
 ```
 
@@ -66,6 +71,52 @@ How
 - Record transfer as log and use job queue to resolve the transaction and locking problem
 - Create balance record monthly and daily for fast read
 
+#### Issue Invoice
+```js
+const receivables = await balanc.getReceivables({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+})
+
+const invoiceUrl = await balanc.issueInvoice({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+})
+
+const invoices = await balanc.getInvoices({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+})
+// [{url, paidAt}]
+
+const receipts = await balanc.getReceipts({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+})
+```
+
+
+#### Access Account
+```js
+const balance = await balanc.getBalance({
+  user: 'billing@your-company.com',
+  item: 'Cash',
+})
+should(balance).be.equal(100)
+
+const account = await balanc.getAccount({
+  user: 'billing@your-company.com',
+  item: 'Cash',
+})
+should(account.balance).be.equal(100)
+should(account.transfers.length).be.equal(1)
+
+const excelUrl = balanc.accountExcelUrl({
+  user: 'billing@your-company.com',
+  item: 'Cash',
+})
+// url that access xlsx file
+```
 
 
 Inspired by
