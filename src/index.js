@@ -6,6 +6,7 @@ import _package from '../package.json'
 
 
 const defaultCtx = {
+  env: process.env.NODE_ENV,
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
   libVersion: _package.version,
 
@@ -17,23 +18,24 @@ const ctxFields = Object.keys(defaultCtx)
 
 export class Balanc {
   constructor(context) {
-    this._context = defaultCtx
+    this.context = defaultCtx
     this.setContext(context)
   }
 
   setContext(context) {
-    _.assign(this._context, _.pick(context, ctxFields))
+    _.assign(this.context, _.pick(context, ctxFields))
     return this
   }
 
   fetch(pathname, data, option) {
-    const {apiUrl, libVersion, ...contextData} = this._context
+    const {apiUrl, libVersion, env, ...contextData} = this.context
     const method = option.method ? option.method.toUpperCase() : 'GET'
 
     // merge default option
     _.set(option, ['headers', 'Content-Type'], 'application/json')
     option.headers['Accept'] = option.accept || 'application/json'
     option.headers['X-Lib-Ver'] = libVersion
+    option.headers['X-Env'] = env
 
     let query = ''
     const json = {
@@ -48,6 +50,7 @@ export class Balanc {
 
     const url = `${apiUrl}/${pathname}${query}`
 
+    // TODO still need this?
     if (method === 'GET' && (option.$out === 'url' || (data && data.$out === 'url'))) {
       return url
     }
@@ -64,6 +67,10 @@ export class Balanc {
       }
     })
   }
+
+  printReceipt(data) {
+    this.fetch('receipt', data, {method: 'GET', $out: 'url'})
+  }
 }
 
 function addMethod(funcName, httpUrl, methodOption) {
@@ -72,10 +79,10 @@ function addMethod(funcName, httpUrl, methodOption) {
   }
 }
 
-addMethod('transact', 'transaction', {method: 'POST'})
-addMethod('getTransfers', 'transfer', {method: 'GET'})
-addMethod('getReceiptUrl', 'receipt', {method: 'GET', $out: 'url'})
-addMethod('getBalance', 'balance', {method: 'GET'})
+addMethod('exchange', 'exchange', {method: 'POST'})
+
+// addMethod('getTransfers', 'transfer', {method: 'GET'})
+// addMethod('getBalance', 'balance', {method: 'GET'})
 
 
 export default new Balanc()

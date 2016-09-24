@@ -63,9 +63,7 @@ const exchange = await balanc.exchange({
   // isPreview: true,
 })
 
-balanc.getReceipt(exchange).open()
-// or
-balanc.getReceipt(exchange).download()
+const pdf = await balanc.printReceipt(exchange)
 
 ```
 
