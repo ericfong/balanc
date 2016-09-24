@@ -21,8 +21,7 @@ describe('api', function() {
   console.log('Testing API:', balanc.config().apiUrl)
 
 
-  it('basic', async () => {
-
+  it('Record exchange and get receipt pdf', async () => {
     // record exchange
     const exchange = await balanc.exchange({
       from: domainEmail,
@@ -56,11 +55,17 @@ describe('api', function() {
     should(pdfContent[3]).be.startWith('No: ')
     should(pdfContent[4]).be.startWith('Date: ')
     // console.log(pdfContent[6].table.body)
+  })
 
 
+  it('Issue Invoice', async () => {
+    const receipts = await balanc.getReceipts({
+      from: domainEmail,
+      to: 'user-123',
+    })
+    should(receipts.length).equal(1)
 
-    // get account balance
-    // const account = await balanc.getBalance({account: 'billing@your-company.com', unit: 'USD', showTransfers: true})
+    // const account = await balanc.getReceipts({account: 'billing@your-company.com', unit: 'USD', showTransfers: true})
     // should(account.transfers.length).be.equal(1)
     // should(account.balance).be.equal(100)
   })

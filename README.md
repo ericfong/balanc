@@ -29,18 +29,15 @@ Demo
 API
 ---
 
-##### Set Context
+##### Setup config
 ```js
-import balanc from 'balanc'
-
-
 balanc.config({
   domain: 'your-company.com',
 })
 ```
 
-Â
-##### Record transaction
+
+##### Record exchange and get receipt pdf
 ```js
 const exchange = await balanc.exchange({
   from: 'billing@your-company.com',
@@ -63,7 +60,7 @@ const exchange = await balanc.exchange({
   // isPreview: true,
 })
 
-const pdf = await balanc.printReceipt(exchange)
+const pdfUrl = await balanc.receiptUrl(exchange)
 
 ```
 

@@ -8,7 +8,7 @@ import _package from '../package.json'
 const defaultConfig = {
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
   _ver: _package.version,
-  _env: process.env.NODE_ENV,
+  _try: process.env.NODE_ENV !== 'production',
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
   // domainKey: '', // 'signed key from server',
@@ -28,8 +28,14 @@ export class Balanc {
   }
 
   receiptUrl({from, number}) {
-    const body = {from, number}
-    return this.mixinConfig({url: 'receipt', body}).url
+    const {apiUrl, domain, _try, domainKey} = this.conf
+    const filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}/${encodeURIComponent(number)}.pdf`
+    const query = {domainKey, _try}
+    return `${apiUrl}/receipt/${filename}?${querystring.stringify(_.pickBy(query))}`
+  }
+
+  getReceipts({from, to}) {
+    return this.fetch({url: 'receipt', body: {from, to}})
   }
 
   config(conf) {
@@ -57,18 +63,22 @@ export class Balanc {
   fetch(ctx) {
     this.mixinConfig(ctx)
 
-    // headers
-    ctx.headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'x-ver': ctx.body._ver,
-      'x-env': ctx.body._env,
-      ...ctx.headers,
-    }
-    delete ctx.body._ver
-    delete ctx.body._env
+    if (ctx.method === 'GET') {
+      // delete body
+      delete ctx.body
+    } else {
+      // headers
+      ctx.headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-ver': ctx.body._ver,
+        'x-env': ctx.body._try,
+        ...ctx.headers,
+      }
+      delete ctx.body._ver
+      delete ctx.body._try
 
-    if (ctx.method !== 'GET') {
+      // body
       ctx.body = JSON.stringify(ctx.body)
     }
 
