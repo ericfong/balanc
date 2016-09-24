@@ -5,57 +5,74 @@ import _fetch from 'isomorphic-fetch'
 import _package from '../package.json'
 
 
-const defaultCtx = {
-  env: process.env.NODE_ENV,
+const defaultConfig = {
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
-  libVersion: _package.version,
+  _ver: _package.version,
+  _env: process.env.NODE_ENV,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
-  domainKey: '', // 'signed key from server',
+  // domainKey: '', // 'signed key from server',
 }
-const ctxFields = Object.keys(defaultCtx)
+const ctxFields = Object.keys(defaultConfig)
 
 
 export class Balanc {
-  constructor(context) {
-    this.context = defaultCtx
-    this.setContext(context)
+  constructor(config) {
+    this.conf = defaultConfig
+    this.config(config)
   }
 
-  setContext(context) {
-    _.assign(this.context, _.pick(context, ctxFields))
+
+  exchange(body) {
+    return this.fetch({method: 'POST', url: 'exchange', body})
+  }
+
+  receiptUrl({from, number}) {
+    const body = {from, number}
+    return this.mixinConfig({url: 'receipt', body}).url
+  }
+
+  config(conf) {
+    if (!conf) return this.conf
+    _.assign(this.conf, _.pick(conf, ctxFields))
     return this
   }
 
-  fetch(pathname, data, option) {
-    const {apiUrl, libVersion, env, ...contextData} = this.context
-    const method = option.method ? option.method.toUpperCase() : 'GET'
-
-    // merge default option
-    _.set(option, ['headers', 'Content-Type'], 'application/json')
-    option.headers['Accept'] = option.accept || 'application/json'
-    option.headers['X-Lib-Ver'] = libVersion
-    option.headers['X-Env'] = env
-
-    let query = ''
-    const json = {
-      ...data,
-      ...contextData,
+  mixinConfig(ctx) {
+    const method = ctx.method = ctx.method ? ctx.method.toUpperCase() : 'GET'
+    const {apiUrl, ...conf} = this.conf
+    const body = {
+      ...conf,
+      ...ctx.body,
     }
-    if (method === 'GET' || method === 'HEAD') {
-      query = '?' + querystring.stringify(json)
+    if (method === 'GET') {
+      ctx.url = `${apiUrl}/${ctx.url}?${querystring.stringify(body)}`
     } else {
-      option.body = JSON.stringify(json)
+      ctx.url = `${apiUrl}/${ctx.url}`
+      ctx.body = body
+    }
+    return ctx
+  }
+
+  fetch(ctx) {
+    this.mixinConfig(ctx)
+
+    // headers
+    ctx.headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'x-ver': ctx.body._ver,
+      'x-env': ctx.body._env,
+      ...ctx.headers,
+    }
+    delete ctx.body._ver
+    delete ctx.body._env
+
+    if (ctx.method !== 'GET') {
+      ctx.body = JSON.stringify(ctx.body)
     }
 
-    const url = `${apiUrl}/${pathname}${query}`
-
-    // TODO still need this?
-    if (method === 'GET' && (option.$out === 'url' || (data && data.$out === 'url'))) {
-      return url
-    }
-
-    return _fetch(url, option)
+    return _fetch(ctx.url, ctx)
     .then(response => {
       if (response.status >= 200 && response.status < 400) {
         const contentType = response.headers.get('Content-Type')
@@ -67,22 +84,6 @@ export class Balanc {
       }
     })
   }
-
-  printReceipt(data) {
-    this.fetch('receipt', data, {method: 'GET', $out: 'url'})
-  }
 }
-
-function addMethod(funcName, httpUrl, methodOption) {
-  Balanc.prototype[funcName] = function(body) {
-    return this.fetch(httpUrl, body, methodOption)
-  }
-}
-
-addMethod('exchange', 'exchange', {method: 'POST'})
-
-// addMethod('getTransfers', 'transfer', {method: 'GET'})
-// addMethod('getBalance', 'balance', {method: 'GET'})
-
 
 export default new Balanc()

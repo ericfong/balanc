@@ -34,7 +34,7 @@ API
 import balanc from 'balanc'
 
 
-balanc.setContext({
+balanc.config({
   domain: 'your-company.com',
 })
 ```

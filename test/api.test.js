@@ -1,6 +1,7 @@
 // import _ from 'lodash'
 import should from 'should'
 import shortid from 'shortid'
+import fetch from 'isomorphic-fetch'
 
 import balanc from '../src'
 
@@ -11,13 +12,18 @@ describe('api', function() {
   const domain = `biz-${shortid.generate()}.com`
   const domainEmail = `info@${domain}`
 
-  balanc.setContext({
+  balanc.config({
     domain,
     domainEmail,
   })
 
+  // eslint-disable-next-line
+  console.log('Testing API:', balanc.config().apiUrl)
+
+
   it('basic', async () => {
 
+    // record exchange
     const exchange = await balanc.exchange({
       from: domainEmail,
       to: 'user-123',
@@ -40,33 +46,18 @@ describe('api', function() {
     })
     should(exchange.transfers.length).equal(2)
 
-    const pdf = await balanc.printReceipt(exchange)
-
-    // const pdfConfig = await balanc.transfer({
-    //   from: 'billing@your-company.com',
-    //   to: 'user-123',
-    //   gives: [
-    //     {
-    //       quantity: 2, // two months implied by item string
-    //       item: 'Monthly Gym Membership',
-    //       price: 100,
-    //     },
-    //   ],
-    //   takes: [
-    //     {
-    //       item: 'Cash',
-    //       price: 100,
-    //     },
-    //   ],
-    //   $out: 'receipt_pdf',
-    // })
-    // const pdfContent = pdfConfig.content
-    // should(pdfContent[0]).has.properties({text: 'Receipt'})
-    // should(pdfContent[1]).be.startWith('To: ')
-    // should(pdfContent[2]).be.startWith('From: ')
-    // should(pdfContent[3]).be.startWith('No: ')
-    // should(pdfContent[4]).be.startWith('Date: ')
+    // access receipt pdf
+    const pdfUrl = balanc.receiptUrl(exchange)
+    const pdfJson = await fetch(pdfUrl).then(res => res.json())
+    const pdfContent = pdfJson.content
+    should(pdfContent[0]).has.properties({text: 'Receipt'})
+    should(pdfContent[1]).be.startWith('To: ')
+    should(pdfContent[2]).be.startWith('From: ')
+    should(pdfContent[3]).be.startWith('No: ')
+    should(pdfContent[4]).be.startWith('Date: ')
     // console.log(pdfContent[6].table.body)
+
+
 
     // get account balance
     // const account = await balanc.getBalance({account: 'billing@your-company.com', unit: 'USD', showTransfers: true})
