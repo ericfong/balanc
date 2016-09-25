@@ -1,16 +1,17 @@
-import querystring from 'querystring'
+import qs from 'querystring'
 import _ from 'lodash'
 import _fetch from 'isomorphic-fetch'
 
 import _package from '../package.json'
 
+const test = process.env.NODE_ENV !== 'production'
 
 const defaultConfig = {
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
   _ver: _package.version,
-  _try: process.env.NODE_ENV !== 'production',
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
+  // domainEmail: String // default from or to
   // domainKey: '', // 'signed key from server',
 }
 const ctxFields = Object.keys(defaultConfig)
@@ -23,21 +24,42 @@ export class Balanc {
   }
 
 
+
+  // Exchange Level
   exchange(body) {
     return this.fetch({method: 'POST', url: 'exchange', body})
   }
 
   receiptUrl({from, number}) {
-    const {apiUrl, domain, _try, domainKey} = this.conf
+    const {apiUrl, domain, domainKey} = this.conf
     const filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}/${encodeURIComponent(number)}.pdf`
-    const query = {domainKey, _try}
-    return `${apiUrl}/receipt/${filename}?${querystring.stringify(_.pickBy(query))}`
+    return `${apiUrl}/receipt/${filename}?${qs.stringify(_.pickBy({domainKey, test}))}`
   }
 
-  getReceipts({from, to}) {
-    return this.fetch({url: 'receipt', body: {from, to}})
+
+
+  // Payment Reminder
+  getReceivables({from, to}) {
+    return this.fetch({url: 'receivable', body: {from, to}})
   }
 
+  billingUrl({from, to}) {
+    const {apiUrl, domain, domainKey} = this.conf
+    let filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}`
+    if (to) filename += `/${encodeURIComponent(to)}`
+    return `${apiUrl}/billing/${filename}.pdf?${qs.stringify(_.pickBy({domainKey, test}))}`
+  }
+
+
+
+  // Account Level
+  getExchangeNumbers({from, to}) {
+    return this.fetch({url: 'exchange', body: {from, to}})
+  }
+
+
+
+  // util
   config(conf) {
     if (!conf) return this.conf
     _.assign(this.conf, _.pick(conf, ctxFields))
@@ -52,7 +74,7 @@ export class Balanc {
       ...ctx.body,
     }
     if (method === 'GET') {
-      ctx.url = `${apiUrl}/${ctx.url}?${querystring.stringify(body)}`
+      ctx.url = `${apiUrl}/${ctx.url}?${qs.stringify(body)}`
     } else {
       ctx.url = `${apiUrl}/${ctx.url}`
       ctx.body = body
@@ -72,11 +94,12 @@ export class Balanc {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'x-ver': ctx.body._ver,
-        'x-env': ctx.body._try,
         ...ctx.headers,
       }
+      if (test) {
+        ctx.headers['x-test'] = test
+      }
       delete ctx.body._ver
-      delete ctx.body._try
 
       // body
       ctx.body = JSON.stringify(ctx.body)

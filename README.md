@@ -37,7 +37,7 @@ balanc.config({
 ```
 
 
-##### Record exchange and get receipt pdf
+##### Record exchange and Receipt pdf
 ```js
 const exchange = await balanc.exchange({
   from: 'billing@your-company.com',
@@ -65,33 +65,29 @@ const pdfUrl = await balanc.receiptUrl(exchange)
 ```
 
 
-#### Issue Invoice
+#### Issue payment reminder
 ```js
 const receivables = await balanc.getReceivables({
   from: 'billing@your-company.com',
   to: 'user-123',
 })
 
-const invoiceUrl = await balanc.issueInvoice({
-  from: 'billing@your-company.com',
-  to: 'user-123',
-})
-
-const invoices = await balanc.getInvoices({
+const invoiceUrl = await balanc.billingUrl({
   from: 'billing@your-company.com',
   to: 'user-123',
 })
 // [{url, paidAt}]
 
-const receipts = await balanc.getReceipts({
-  from: 'billing@your-company.com',
-  to: 'user-123',
-})
 ```
 
 
-#### Access Account
+#### Access Accounts
 ```js
+const numbers = await balanc.getExchangeNumbers({
+  from: 'billing@your-company.com',
+  to: 'user-123',
+})
+
 const balance = await balanc.getBalance({
   user: 'billing@your-company.com',
   item: 'Cash',

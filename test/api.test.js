@@ -21,7 +21,7 @@ describe('api', function() {
   console.log('Testing API:', balanc.config().apiUrl)
 
 
-  it('Record exchange and get receipt pdf', async () => {
+  it('Record exchange and Receipt pdf', async () => {
     // record exchange
     const exchange = await balanc.exchange({
       from: domainEmail,
@@ -58,15 +58,43 @@ describe('api', function() {
   })
 
 
-  it('Issue Invoice', async () => {
-    const receipts = await balanc.getReceipts({
+  it('Issue payment reminder', async () => {
+    const receivables = await balanc.getReceivables({
+      from: domainEmail,
+      to: 'user-123',
+    })
+
+    const invoiceUrl = await balanc.billingUrl({
+      from: domainEmail,
+      to: 'user-123',
+    })
+    // [{url, paidAt}]
+  })
+
+
+  it.skip('Access Accounts', async () => {
+    const receipts = await balanc.getExchangeNumbers({
       from: domainEmail,
       to: 'user-123',
     })
     should(receipts.length).equal(1)
 
-    // const account = await balanc.getReceipts({account: 'billing@your-company.com', unit: 'USD', showTransfers: true})
-    // should(account.transfers.length).be.equal(1)
-    // should(account.balance).be.equal(100)
+    const balance = await balanc.getBalance({
+      from: domainEmail,
+      item: 'Cash',
+    })
+    should(balance).be.equal(100)
+
+    const account = await balanc.getAccount({
+      from: domainEmail,
+      item: 'Cash',
+    })
+    should(account.balance).be.equal(100)
+    should(account.transfers.length).be.equal(1)
+
+    const excelUrl = balanc.accountExcelUrl({
+      from: domainEmail,
+      item: 'Cash',
+    })
   })
 })
