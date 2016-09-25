@@ -29,6 +29,9 @@ export class Balanc {
   exchange(body) {
     return this.fetch({method: 'POST', url: 'exchange', body})
   }
+  exchangeAppend(body) {
+    return this.fetch({method: 'POST', url: 'exchange/append', body})
+  }
 
   receiptUrl({from, number}) {
     const {apiUrl, domain, domainKey} = this.conf

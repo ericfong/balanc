@@ -31,14 +31,14 @@ describe('api', function() {
           quantity: 2, // two months implied by item string
           item: 'Monthly Gym Membership',
           price: 100, // sub-total price of 2 monthly Gym
-          // deliveredAt: new Date(),
+          // givenAt: true,
         },
       ],
       takes: [
         {
           item: 'Cash',
           price: 100,
-          // isPending: true,
+          // givenAt: true,
         },
       ],
       // isPreview: true,
@@ -63,6 +63,7 @@ describe('api', function() {
       from: domainEmail,
       to: 'user-123',
     })
+    console.log(receivables)
 
     const invoiceUrl = await balanc.billingUrl({
       from: domainEmail,

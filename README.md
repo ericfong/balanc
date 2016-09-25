@@ -47,14 +47,13 @@ const exchange = await balanc.exchange({
       quantity: 2, // two months implied by item string
       item: 'Monthly Gym Membership',
       price: 100, // sub-total price of 2 monthly Gym
-      // deliveredAt: new Date(),
+      // givenAt: new Date(),
     },
   ],
   takes: [
     {
       item: 'Cash',
       price: 100,
-      // isPending: true,
     },
   ],
   // isPreview: true,
