@@ -26,16 +26,16 @@ export class Balanc {
 
 
   // Exchange Level
-  exchange(body) {
-    return this.fetch({method: 'POST', url: 'exchange', body})
+  createDeal(body) {
+    return this.fetch({method: 'POST', url: 'deal', body})
   }
-  exchangeAppend(body) {
-    return this.fetch({method: 'POST', url: 'exchange/append', body})
-  }
+  // exchangeAppend(body) {
+  //   return this.fetch({method: 'POST', url: 'exchange/append', body})
+  // }
 
-  receiptUrl({from, number}) {
+  receiptUrl({_key}) {
     const {apiUrl, domain, domainKey} = this.conf
-    const filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}/${encodeURIComponent(number)}.pdf`
+    const filename = `${encodeURIComponent(domain)}/${encodeURIComponent(_key)}.pdf`
     return `${apiUrl}/receipt/${filename}?${qs.stringify(_.pickBy({domainKey, test}))}`
   }
 
@@ -56,8 +56,8 @@ export class Balanc {
 
 
   // Account Level
-  getExchangeNumbers({from, to}) {
-    return this.fetch({url: 'exchange', body: {from, to}})
+  getDeals({from, to}) {
+    return this.fetch({url: 'deal', body: {from, to}})
   }
 
 

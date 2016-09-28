@@ -1,4 +1,4 @@
-// import _ from 'lodash'
+import _ from 'lodash'
 import should from 'should'
 import shortid from 'shortid'
 import fetch from 'isomorphic-fetch'
@@ -18,35 +18,26 @@ describe('api', function() {
   })
 
   // eslint-disable-next-line
-  console.log('Testing API:', balanc.config().apiUrl)
+  console.log('BALANC_API=', balanc.config().apiUrl)
 
 
   it('Record exchange and Receipt pdf', async () => {
-    // record exchange
-    const exchange = await balanc.exchange({
+
+    const deal = await balanc.createDeal({
       from: domainEmail,
-      to: 'user-123',
-      gives: [
-        {
-          quantity: 2, // two months implied by item string
-          item: 'Monthly Gym Membership',
+      to: 'to-user',
+      transfers: {
+        'Monthly Gym Membership': {
           price: 100, // sub-total price of 2 monthly Gym
-          // givenAt: true,
+          quantity: 2, // two months implied by item string
         },
-      ],
-      takes: [
-        {
-          item: 'Cash',
-          price: 100,
-          // givenAt: true,
-        },
-      ],
-      // isPreview: true,
+        Cash: -100, // negative 100 means, source user get back $100
+      },
     })
-    should(exchange.transfers.length).equal(2)
+    should(_.size(deal.transfers)).equal(2)
 
     // access receipt pdf
-    const pdfUrl = balanc.receiptUrl(exchange)
+    const pdfUrl = balanc.receiptUrl(deal)
     const pdfJson = await fetch(pdfUrl).then(res => res.json())
     const pdfContent = pdfJson.content
     should(pdfContent[0]).has.properties({text: 'Receipt'})
