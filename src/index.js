@@ -46,11 +46,10 @@ export class Balanc {
     return this.fetch({url: 'receivable', body: {from, to}})
   }
 
-  billingUrl({from, to}) {
+  billUrl({from, to}) {
     const {apiUrl, domain, domainKey} = this.conf
-    let filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}`
-    if (to) filename += `/${encodeURIComponent(to)}`
-    return `${apiUrl}/billing/${filename}.pdf?${qs.stringify(_.pickBy({domainKey, test}))}`
+    const filename = `${encodeURIComponent(domain)}/${encodeURIComponent(from)}/${encodeURIComponent(to)}`
+    return `${apiUrl}/bill/${filename}.pdf?${qs.stringify(_.pickBy({domainKey, test}))}`
   }
 
 
@@ -58,6 +57,19 @@ export class Balanc {
   // Account Level
   getDeals({from, to}) {
     return this.fetch({url: 'deal', body: {from, to}})
+  }
+
+  getAccount({user, account, field}) {
+    return this.fetch({url: 'account', body: {user, account, field}})
+  }
+
+  accountExcelUrl({user, account, field}) {
+    const {apiUrl, domain, domainKey} = this.conf
+    let filename = `${encodeURIComponent(domain)}/${encodeURIComponent(user)}/${encodeURIComponent(account)}`
+    if (field) {
+      filename += `/${encodeURIComponent(field)}`
+    }
+    return `${apiUrl}/bill/${filename}.xlsx?${qs.stringify(_.pickBy({domainKey, test}))}`
   }
 
 

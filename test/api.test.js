@@ -50,43 +50,79 @@ describe('api', function() {
 
 
   it('Issue payment reminder', async () => {
+    const deal = await balanc.createDeal({
+      from: domainEmail, to: 'to-user',
+      transfers: {
+        'Apple': {
+          price: 10,
+          quantity: 1,
+        },
+        Cash: -10,
+      },
+      pendings: 'All',
+    })
+    deal.pendings.should.deepEqual(['Apple', 'Cash'])
+
+    await balanc.createDeal({
+      from: domainEmail, to: 'to-user2',
+      transfers: {
+        'Apple': {
+          price: 20,
+          quantity: 2,
+        },
+        Cash: -20,
+      },
+      // delivered Apple, but waiting for Cash
+      pendings: ['Cash'],
+    })
+
     const receivables = await balanc.getReceivables({
       from: domainEmail,
-      to: 'user-123',
+      // to: 'to-user',
     })
-    console.log(receivables)
-
-    const invoiceUrl = await balanc.billingUrl({
+    receivables.deals.should.have.length(2)
+    receivables.deals[0].receivables.should.have.deepEqual(['Cash'])
+    receivables.total.should.be.equal(30)
+    should(await balanc.getReceivables({
       from: domainEmail,
-      to: 'user-123',
+      to: 'to-user',
+    })).has.properties({
+      total: 10,
     })
-    // [{url, paidAt}]
+
+    const billUrl = balanc.billUrl({from: domainEmail, to: 'to-user2'})
+    const pdfJson = await fetch(billUrl).then(res => res.json())
+    const pdfContent = pdfJson.content
+    should(pdfContent[0]).has.properties({text: 'Bill'})
+    should(pdfContent[1]).be.startWith('To: ')
+    should(pdfContent[2]).be.startWith('From: ')
+    should(pdfContent[5]).be.startWith('No: ')
+    should(pdfContent[6]).be.startWith('Date: ')
+    should(pdfContent[7].table.body[1]).deepEqual([ 'Apple  x2', '20' ])
+    // console.log(pdfContent[7].table.body)
   })
 
 
-  it.skip('Access Accounts', async () => {
-    const receipts = await balanc.getExchangeNumbers({
+  it('Access Accounts', async () => {
+    const deals = await balanc.getDeals({
       from: domainEmail,
-      to: 'user-123',
+      to: 'to-user',
     })
-    should(receipts.length).equal(1)
+    should(deals.length).equal(2)
 
-    const balance = await balanc.getBalance({
-      from: domainEmail,
-      item: 'Cash',
+    should(
+      await balanc.getAccount({
+        user: domainEmail,
+        account: 'Cash',
+      })
+    ).be.properties({
+      balance: 100,
     })
-    should(balance).be.equal(100)
-
-    const account = await balanc.getAccount({
-      from: domainEmail,
-      item: 'Cash',
-    })
-    should(account.balance).be.equal(100)
-    should(account.transfers.length).be.equal(1)
 
     const excelUrl = balanc.accountExcelUrl({
-      from: domainEmail,
-      item: 'Cash',
+      user: domainEmail,
+      account: 'Cash',
     })
+    console.log(excelUrl)
   })
 })
