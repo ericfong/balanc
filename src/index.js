@@ -29,9 +29,9 @@ export class Balanc {
   createDeal(body) {
     return this.fetch({method: 'POST', url: 'deal', body})
   }
-  // exchangeAppend(body) {
-  //   return this.fetch({method: 'POST', url: 'exchange/append', body})
-  // }
+  markArrive(dealKey, itemKeys) {
+    return this.fetch({method: 'POST', url: `deal/${dealKey}/markArrive`, body: {itemKeys}})
+  }
 
   receiptUrl({_key}) {
     const {apiUrl, domain, domainKey} = this.conf

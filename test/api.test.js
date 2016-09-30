@@ -83,11 +83,32 @@ describe('api', function() {
     receivables.deals.should.have.length(2)
     receivables.deals[0].receivables.should.have.deepEqual(['Cash'])
     receivables.total.should.be.equal(30)
-    should(await balanc.getReceivables({
-      from: domainEmail,
-      to: 'to-user',
-    })).has.properties({
+
+    // brefore markArrive
+    should(
+      await balanc.getReceivables({
+        from: domainEmail,
+        to: 'to-user',
+      })
+    ).has.properties({
       total: 10,
+    })
+    await balanc.markArrive(deal._key, ['Cash', 'Apple'])
+    // after markArrive
+    should(
+      await balanc.getReceivables({
+        from: domainEmail,
+        to: 'to-user',
+      })
+    ).has.properties({
+      total: 0,
+    })
+    should(
+      await balanc.getReceivables({
+        from: domainEmail,
+      })
+    ).properties({
+      total: 20,
     })
 
     const billUrl = balanc.billUrl({from: domainEmail, to: 'to-user2'})
@@ -116,7 +137,7 @@ describe('api', function() {
         account: 'Cash',
       })
     ).be.properties({
-      balance: 100,
+      balance: 110,
     })
 
     const excelUrl = balanc.accountExcelUrl({
