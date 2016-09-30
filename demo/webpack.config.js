@@ -43,13 +43,18 @@ module.exports = (env) => {
       new webpack.HotModuleReplacementPlugin(),
     ],
     resolve: {
-      extensions: ['', '.js', '.jsx'],
+      extensions: ['.js', '.jsx'],
     },
 
     devtool: 'eval',
     devServer: {
       port: 7000,
       stats: { colors: true, chunks: false },
+      proxy: {
+        '/v1': {
+          target: 'http://localhost:8000',
+        },
+      },
     },
   }
 

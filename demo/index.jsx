@@ -1,3 +1,4 @@
+import shortid from 'shortid'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -6,33 +7,28 @@ import balanc from '../src'
 
 (async () => {
 
+  const domain = `biz-${shortid.generate()}.com`
+  const domainEmail = `info@${domain}`
+
   // EXTRACT TO README.md
-  balanc.setContext({
-    domain: 'your-company.com',
+  balanc.config({
+    domain,
+    domainEmail,
   })
 
-  const response = await balanc.transact({
-    from: 'billing@your-company.com',
-    to: 'user-123',
-    gives: [
-      {
+  const deal = await balanc.createDeal({
+    from: domainEmail,
+    to: 'to-user',
+    transfers: {
+      'Monthly Gym Membership': {
+        price: 100, // sub-total price of 2 monthly Gym
         quantity: 2, // two months implied by item string
-        item: 'Monthly Gym Membership',
-        price: 100,
       },
-    ],
-    takes: [
-      {
-        item: 'Cash',
-        price: 100,
-      },
-    ],
-    $out: 'receipt_pdf',
+      Cash: -100, // negative 100 means, source user get back $100
+    },
   })
-  const receiptPdfBlob = response.blob()
+  const receiptUrl = balanc.receiptUrl(deal)
   // END OF EXTRACT TO README.md
-
-  const receiptUrl = URL.createObjectURL(await receiptPdfBlob)
 
   ReactDOM.render((
     <div>

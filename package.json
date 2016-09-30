@@ -10,7 +10,7 @@
     "build:gitbook": "gitbook build",
     "start:gitbook": "gitbook serve",
     "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production",
-    "start": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:8000/v1"
+    "start": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:7000/v1"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",

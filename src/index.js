@@ -4,7 +4,7 @@ import _fetch from 'isomorphic-fetch'
 
 import _package from '../package.json'
 
-const test = process.env.NODE_ENV !== 'production'
+const test = process.env.NODE_ENV === 'test'
 
 const defaultConfig = {
   apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
