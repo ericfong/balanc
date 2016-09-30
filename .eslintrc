@@ -1,0 +1,37 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["import", "babel", "lodash", "react"],
+  "rules": {
+    "react/prop-types": 0,
+    semi: [1, 'never'],
+    "no-unused-vars": 1,
+    "no-unused-labels": 1,
+    "no-unused-expressions": 1,
+    "comma-dangle": ["warn", "always-multiline"],
+    "quotes": [1, "single"],
+    "angular/definedundefined": 0,
+    "prefer-const": 1,
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/named": 2,
+    "import/default": 2,
+    "import/export": 2,
+    "import/newline-after-import": "warn",
+    "no-trailing-spaces": 1
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"],
+      }
+    },
+    "import/extensions": [".js", ".jsx"],
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "mocha": true,
+  },
+  "parser": "babel-eslint",
+  "root": true,
+}

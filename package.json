@@ -1,0 +1,69 @@
+{
+  "name": "balanc",
+  "description": "Modern accounting (receipts, billings, pdf storage ...) toolchain and managed service",
+  "version": "0.2.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register",
+    "prepublish": "babel src --out-dir lib",
+    "publish:doc": "gitbook build && npm run build:demo && cd _book && git init && git commit --allow-empty -m doc && git checkout -b gh-pages && git add . && git commit -am doc && git push https://github.com/ericfong/balanc.git gh-pages --force",
+    "build:gitbook": "gitbook build",
+    "start:gitbook": "gitbook serve",
+    "build:demo": "webpack --config ./demo/webpack.config.js --env.NODE_ENV=production",
+    "start": "webpack-dev-server --config ./demo/webpack.config.js --env.BALANC_API=http://localhost:7000/v1"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.16.0",
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-latest": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-runtime": "^6.11.6",
+    "cross-env": "^2.0.1",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.5.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^1.15.0",
+    "eslint-plugin-lodash": "^1.10.3",
+    "eslint-plugin-react": "^6.3.0",
+    "gitbook-cli": "^2.3.0",
+    "html-webpack-plugin": "^2.22.0",
+    "json-loader": "^0.5.4",
+    "material-ui": "^0.15.4",
+    "mocha": "^3.0.2",
+    "npm-run-all": "^3.1.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "should": "^11.1.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^2.1.0-beta.22",
+    "webpack-dev-server": "^2.1.0-beta.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericfong/balanc.git"
+  },
+  "keywords": [
+    "cloud",
+    "database",
+    "sales",
+    "receipt",
+    "invoice",
+    "billing",
+    "inventory"
+  ],
+  "author": "Eric Fong",
+  "bugs": {
+    "url": "https://github.com/ericfong/balanc/issues"
+  },
+  "homepage": "https://github.com/ericfong/balanc#readme"
+}

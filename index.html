@@ -1,0 +1,283 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Introduction · GitBook</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.0">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="doc/style.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="balanc">balanc</h1><p>Modern accounting (receipts, billings, pdf storage ...) toolchain and managed service. Making accounting easy and always balance.</p><p><a href=""><img alt="npm" src="https://img.shields.io/npm/dt/balanc.svg?maxAge=2592000?style=flat-square"></a>
+<a href=""><img alt="npm" src="https://img.shields.io/npm/v/balanc.svg"></a>
+<a href=""><img alt="state" src="https://img.shields.io/badge/state-development-orange.svg"></a>
+<a href=""><img alt="npm" src="https://img.shields.io/npm/l/balanc.svg"></a></p><p><a href="https://nodei.co/npm/balanc/" target="_blank"><img alt="NPM" src="https://nodei.co/npm-dl/balanc.png?months=1"></a></p><h2 id="why">Why</h2><ul><li>if you are using NoSQL, balanc can replace traditional lock and transaction required operations for orders, invoices, receives and payments
+</li>
+<li>if you are using SQL, balanc can solve the scale and storage problem
+</li></ul>
+<h2 id="demo">Demo</h2><p><a href="https://ericfong.github.io/balanc/demo/index.html" target="_blank">Basic Receipt Pdf Demo</a></p><h2 id="api">API</h2><h5 id="setup-config">Setup config</h5><pre><code class="lang-js">balanc.config({
+  domain: <span class="hljs-string">&apos;your-company.com&apos;</span>,
+})</code></pre>
+<h5 id="record-exchange-and-receipt-pdf">Record exchange and Receipt pdf</h5><pre><code class="lang-js"><span class="hljs-keyword">const</span> exchange = <span class="hljs-keyword">await</span> balanc.exchange({
+  <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  to: <span class="hljs-string">&apos;user-123&apos;</span>,
+  gives: [
+    {
+      quantity: <span class="hljs-number">2</span>, <span class="hljs-comment">// two months implied by item string</span>
+      item: <span class="hljs-string">&apos;Monthly Gym Membership&apos;</span>,
+      price: <span class="hljs-number">100</span>, <span class="hljs-comment">// sub-total price of 2 monthly Gym</span>
+      <span class="hljs-comment">// givenAt: new Date(),</span>
+    },
+  ],
+  takes: [
+    {
+      item: <span class="hljs-string">&apos;Cash&apos;</span>,
+      price: <span class="hljs-number">100</span>,
+    },
+  ],
+  <span class="hljs-comment">// isPreview: true,</span>
+})
+
+<span class="hljs-keyword">const</span> pdfUrl = <span class="hljs-keyword">await</span> balanc.receiptUrl(exchange)
+</code></pre>
+<h4 id="issue-payment-reminder">Issue payment reminder</h4><pre><code class="lang-js"><span class="hljs-keyword">const</span> receivables = <span class="hljs-keyword">await</span> balanc.getReceivables({
+  <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  to: <span class="hljs-string">&apos;user-123&apos;</span>,
+})
+
+<span class="hljs-keyword">const</span> invoiceUrl = <span class="hljs-keyword">await</span> balanc.billingUrl({
+  <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  to: <span class="hljs-string">&apos;user-123&apos;</span>,
+})
+<span class="hljs-comment">// [{url, paidAt}]</span>
+</code></pre>
+<h4 id="access-accounts">Access Accounts</h4><pre><code class="lang-js"><span class="hljs-keyword">const</span> numbers = <span class="hljs-keyword">await</span> balanc.getExchangeNumbers({
+  <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  to: <span class="hljs-string">&apos;user-123&apos;</span>,
+})
+
+<span class="hljs-keyword">const</span> balance = <span class="hljs-keyword">await</span> balanc.getBalance({
+  user: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  item: <span class="hljs-string">&apos;Cash&apos;</span>,
+})
+should(balance).be.equal(<span class="hljs-number">100</span>)
+
+<span class="hljs-keyword">const</span> account = <span class="hljs-keyword">await</span> balanc.getAccount({
+  user: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  item: <span class="hljs-string">&apos;Cash&apos;</span>,
+})
+should(account.balance).be.equal(<span class="hljs-number">100</span>)
+should(account.transfers.length).be.equal(<span class="hljs-number">1</span>)
+
+<span class="hljs-keyword">const</span> excelUrl = balanc.accountExcelUrl({
+  user: <span class="hljs-string">&apos;billing@your-company.com&apos;</span>,
+  item: <span class="hljs-string">&apos;Cash&apos;</span>,
+})
+<span class="hljs-comment">// url that access xlsx file</span></code></pre>
+<h2 id="how">How</h2><ul><li>Based on <a href="http://eddyy.com" target="_blank">http://eddyy.com</a>
+</li>
+<li>Record transfer as log and use job queue to resolve the transaction and locking problem
+</li>
+<li>Create balance record monthly and daily for fast read
+</li>
+<li>Inspired by <a href="https://dzone.com/articles/how-implement-robust-and" target="_blank">https://dzone.com/articles/how-implement-robust-and</a>
+</li></ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"3.2.0","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"doc/style.css"}},"file":{"path":"README.md","mtime":"2016-09-30T18:21:36.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-30T18:28:52.714Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
