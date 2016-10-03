@@ -24,6 +24,9 @@ Demo
 ----
 [Basic Receipt Pdf Demo](https://ericfong.github.io/balanc/demo/index.html)
 
+<form action="https://eddyy.com/demo">
+  <input type="submit" value="Try out Demo">
+</form>
 
 
 API
