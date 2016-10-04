@@ -11,7 +11,7 @@ const defaultConfig = {
   _ver: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
-  // domainEmail: String // default from or to
+  domainEmail: '', // default from or to
   // domainKey: '', // 'signed key from server',
 }
 const ctxFields = Object.keys(defaultConfig)
