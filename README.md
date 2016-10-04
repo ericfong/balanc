@@ -22,7 +22,7 @@ Why
 
 Demo
 ----
-[Basic Receipt Pdf Demo](https://ericfong.github.io/balanc/demo/index.html)
+[Receipt Pdf Demo](https://eddyy.com/prod/demo.html)
 
 
 
