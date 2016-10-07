@@ -22,7 +22,7 @@ Why
 
 Demo
 ----
-[Receipt Pdf Demo](https://eddyy.com/prod/demo.html)
+[Receipt Pdf Demo](https://eddyy.com/doc/demo)
 
 
 
