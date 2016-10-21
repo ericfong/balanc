@@ -3,7 +3,7 @@ import should from 'should'
 import shortid from 'shortid'
 import fetch from 'isomorphic-fetch'
 
-import balanc from '../src'
+import balanc, {Balanc} from '../src'
 
 
 describe('api', function() {
@@ -48,6 +48,36 @@ describe('api', function() {
     // console.log(pdfContent[6].table.body)
   })
 
+  it.only('Record exchange and Receipt pdf. Offline', async () => {
+    const balanc2 = new Balanc({
+      apiUrl: 'http://localhost:1/v1',
+      domain,
+      domainEmail,
+    })
+    const deal = await balanc2.createDeal({
+      from: domainEmail,
+      to: 'to-user',
+      transfers: {
+        'Monthly Gym Membership': {
+          price: 100, // sub-total price of 2 monthly Gym
+          quantity: 2, // two months implied by item string
+        },
+        Cash: -100, // negative 100 means, source user get back $100
+      },
+    })
+    should(_.size(deal.transfers)).equal(2)
+
+    // access receipt pdf
+    const pdfUrl = balanc2.receiptUrl(deal)
+    console.log('>>>', pdfUrl)
+    // const pdfJson = await fetch(pdfUrl).then(res => res.json())
+    // const pdfContent = pdfJson.content
+    // should(pdfContent[0]).has.properties({text: 'Receipt'})
+    // should(pdfContent[1]).be.startWith('To: ')
+    // should(pdfContent[2]).be.startWith('From: ')
+    // should(pdfContent[3]).be.startWith('No: ')
+    // should(pdfContent[4]).be.startWith('Date: ')
+  })
 
   it('Issue payment reminder', async () => {
     const deal = await balanc.createDeal({

@@ -1,6 +1,4 @@
 import shortid from 'shortid'
-import React from 'react'
-import ReactDOM from 'react-dom'
 
 import balanc from '../src'
 
@@ -10,12 +8,12 @@ import balanc from '../src'
   const domain = `biz-${shortid.generate()}.com`
   const domainEmail = `info@${domain}`
 
-  // EXTRACT TO README.md
   balanc.config({
     domain,
     domainEmail,
   })
 
+  // create deal
   const deal = await balanc.createDeal({
     from: domainEmail,
     to: 'to-user',
@@ -27,17 +25,8 @@ import balanc from '../src'
       Cash: -100, // negative 100 means, source user get back $100
     },
   })
-  const receiptUrl = balanc.receiptUrl(deal)
-  // END OF EXTRACT TO README.md
 
-  ReactDOM.render((
-    <div>
-      <iframe
-        src={receiptUrl}
-        seamless
-        width="100%"
-        height="700px"
-        />
-    </div>
-  ), document.getElementById('app'))
+  // open receipt for that deal in new window
+  balanc.openWindow(balanc.receiptUrl(deal))
+
 })()

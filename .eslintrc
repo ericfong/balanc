@@ -16,7 +16,8 @@
     "import/default": 2,
     "import/export": 2,
     "import/newline-after-import": "warn",
-    "no-trailing-spaces": 1
+    "no-trailing-spaces": 1,
+    "no-console": 0,
   },
   "settings": {
     "import/resolver": {

@@ -5,3 +5,4 @@ tmp-*
 
 /lib/
 /_book/
+/bower_components/

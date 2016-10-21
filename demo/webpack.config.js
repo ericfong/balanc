@@ -2,11 +2,8 @@ const Path = require('path')
 const webpack = require('webpack')  // eslint-disable-line
 const HtmlWebpackPlugin = require('html-webpack-plugin')  // eslint-disable-line
 
-module.exports = (env) => {
-  console.log('env', env) // eslint-disable-line
-  Object.assign(process.env, env)
-
-  const conf = {
+module.exports = () => {
+  return {
     context: __dirname,
     entry: {
       index: './index',
@@ -20,10 +17,9 @@ module.exports = (env) => {
 
     module: {
       loaders: [
-        { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
+        { test: /\.jsx?$/, exclude: /(node_modules|bower_components)/, loader: 'babel' },
         { test: /\.json$/, loader: 'json' },
-        { test: /\.css$/, loader: 'style!css' },
-        { test: [/\.png$/, /\.gif$/, /\.jpg$/, /\.svg$/], loader: 'url-loader' },
+        // { test: /\.css$/, loader: 'style!css' },
       ],
     },
     plugins: [
@@ -41,14 +37,15 @@ module.exports = (env) => {
         },
       }),
       new webpack.HotModuleReplacementPlugin(),
+      new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
     ],
     resolve: {
       extensions: ['.js', '.jsx'],
     },
 
-    devtool: 'eval',
+    devtool: 'source-map',
     devServer: {
-      port: 7000,
+      port: 8008,
       stats: { colors: true, chunks: false },
       proxy: {
         '/v1': {
@@ -57,6 +54,4 @@ module.exports = (env) => {
       },
     },
   }
-
-  return conf
 }
