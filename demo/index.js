@@ -3,16 +3,16 @@ import shortid from 'shortid'
 import balanc from '../src'
 
 
-(async () => {
+const domain = `biz-${shortid.generate()}.com`
+const domainEmail = `info@${domain}`
 
-  const domain = `biz-${shortid.generate()}.com`
-  const domainEmail = `info@${domain}`
+balanc.config({
+  domain,
+  domainEmail,
+})
 
-  balanc.config({
-    domain,
-    domainEmail,
-  })
 
+document.getElementById('runButton').onclick = async function() {
   // create deal
   const deal = await balanc.createDeal({
     from: domainEmail,
@@ -27,6 +27,5 @@ import balanc from '../src'
   })
 
   // open receipt for that deal in new window
-  balanc.openWindow(balanc.receiptUrl(deal))
-
-})()
+  balanc.openWindow(balanc.receiptUrl(deal), {target: 'receiptWin'})
+}

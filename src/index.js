@@ -114,9 +114,9 @@ export class Balanc {
   }
 
 
-  openWindow(urlPromise) {
+  openWindow(urlPromise, {target = '_blank'} = {}) {
     // we have to open the window immediately and store the reference otherwise popup blockers will stop us
-    const win = window.open('', '_blank')
+    const win = window.open('', target)
     return urlPromise
     .then(url => {
       win.location.href = url
