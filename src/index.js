@@ -114,10 +114,10 @@ export class Balanc {
   }
 
 
-  openWindow(urlPromise, {target = '_blank'} = {}) {
+  openWindow({target = '_blank'} = {}, asyncFunc) {
     // we have to open the window immediately and store the reference otherwise popup blockers will stop us
     const win = window.open('', target)
-    return urlPromise
+    return asyncFunc()
     .then(url => {
       win.location.href = url
     })
