@@ -12,7 +12,7 @@ const test = process.env.NODE_ENV === 'test'
 
 
 const defaultConfig = {
-  apiUrl: process.env.BALANC_API || 'https://eddyy.com/v1',
+  apiUrl: process.env.BALANC_API || 'https://eddyy.com/api',
   _ver: _package.version,
 
   domain: typeof window !== 'undefined' ? window.location.hostname : undefined,
