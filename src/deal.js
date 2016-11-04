@@ -1,12 +1,4 @@
 import _ from 'lodash'
-import Ajv from 'ajv'
-
-import dealSchema from './deal-schema'
-
-
-const ajv = new Ajv({removeAdditional: 'failing'})
-
-const validateDeal = ajv.compile(dealSchema)
 
 
 export function normalizeDeal(deal) {
@@ -25,11 +17,6 @@ export function normalizeDeal(deal) {
     deal.pendings = _.keys(deal.transfers)
   } else if (_.isEmpty(deal.pendings)) {
     delete deal.pendings
-  }
-
-  if (!validateDeal(deal)) {
-    console.error('deal validation error', validateDeal.errors)
-    throw new Error(validateDeal.errors)
   }
 
   return deal
