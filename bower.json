@@ -1,0 +1,29 @@
+{
+  "name": "balanc",
+  "description": "Modern accounting (receipts, billings, pdf storage ...) toolchain and managed service",
+  "main": "lib/index.js",
+  "authors": [
+    "Eric Fong"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "cloud",
+    "database",
+    "sales",
+    "receipt",
+    "invoice",
+    "billing",
+    "inventory"
+  ],
+  "homepage": "https://github.com/ericfong/balanc",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pdfmake": "^0.1.20"
+  }
+}

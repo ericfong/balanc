@@ -4,6 +4,7 @@
   "version": "0.2.2",
   "main": "lib/index.js",
   "scripts": {
+    "postinstall": "bower install",
     "prepublish": "run-s build:lib build:browser",
     "build:lib": "babel src --out-dir lib",
     "build:browser": "webpack --config ./webpack.config.js",
