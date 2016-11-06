@@ -29,7 +29,7 @@ ajv-keywords@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.1.1.tgz#02550bc605a3e576041565628af972e06c549d50"
 
-ajv@^4.7.0, ajv@^4.8.1:
+ajv@^4.7.0:
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.8.2.tgz#65486936ca36fea39a1504332a78bebd5d447bdc"
   dependencies:
@@ -2629,6 +2629,10 @@ lodash@^4.0.0, lodash@^4.16.2, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.3.0:
 lodash@~3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.1.0.tgz#d41b8b33530cb3be088853208ad30092d2c27961"
+
+lokijs:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/lokijs/-/lokijs-1.4.1.tgz#ea17be92d2ea7caba1c816d6c2006424e8db0bfe"
 
 longest@^1.0.1:
   version "1.0.1"
