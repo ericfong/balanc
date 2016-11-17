@@ -193,16 +193,16 @@ export class Balanc {
       ctx.headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'x-ver': ctx.body._ver,
+        // 'x-ver': ctx.body._ver,
         ...ctx.headers,
       }
       if (test) {
         ctx.headers['x-test'] = test
       }
-      delete ctx.body._ver
+      // delete ctx.body._ver
 
       // body
-      ctx.body = JSON.stringify(ctx.body)
+      ctx.body = typeof ctx.body === 'string' ? ctx.body : JSON.stringify(ctx.body)
     }
 
     return _fetch(ctx.url, ctx)

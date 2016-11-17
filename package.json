@@ -9,7 +9,6 @@
     "build:lib": "babel src --out-dir lib",
     "build:browser": "webpack --config ./webpack.config.js",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register",
-    "publish:doc": "gitbook build && npm run build:demo && cd _book && git init && git commit --allow-empty -m doc && git checkout -b gh-pages && git add . && git commit -am doc && git push https://github.com/ericfong/balanc.git gh-pages --force",
     "start": "cross-env BALANC_API=http://localhost:8008/v1 webpack-dev-server --config ./demo/webpack.config.js"
   },
   "dependencies": {
