@@ -3,9 +3,10 @@ import _ from 'lodash'
 import _fetch from 'isomorphic-fetch'
 
 import _package from '../package.json'
-import {normalizeDeal, markArrive} from './deal'
+import {normalize} from './transaction'
 import createPdf from './createPdf'
 import renderReceipt from './receipt'
+import patchStore from './patchStore'
 
 
 const test = process.env.NODE_ENV === 'test'
@@ -22,78 +23,46 @@ const defaultConfig = {
 const ctxFields = Object.keys(defaultConfig)
 
 
-// global increment only number
-let _lastNumber
-function getNumber() {
-  let id = Date.now()
-  if (id === _lastNumber) id ++
-  _lastNumber = id
-  return id
-}
-
-
 export class Balanc {
 
   constructor(config) {
     this.conf = defaultConfig
     this.config(config)
-  }
 
-  // operations
-  pendingDeals = []
-  async _postQueue(deal) {
-    // enqueue in pendingDeals array
-    const lastNumber = _lastNumber
-    const number = getNumber()
-    Object.assign(deal, {
-      lastNumber,
-      number,
-      _id: `Tmp/${number}`,
-    })
-    this.pendingDeals.push(deal)
-
-    try {
+    this.transactions = patchStore()
+    this.transactions.setHook(async operations => {
       // upload all pendingDeals
-      const feedbacks = await this.fetch({method: 'POST', url: 'batch', body: {pendingDeals: this.pendingDeals}})
-      _.pullAllBy(this.pendingDeals, _.filter(feedbacks, {type: 'done'}), 'number')
-      // just return the current pending result
-      const feedback = _.find(feedbacks, {number: deal.number})
-      return feedback.output
-    } catch(err) {
-      // if ECONN REFUSED, just return the tmp deal
-      // err.response means any of fetch error
-      if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
-        return deal
-      }
-      throw err
-    }
+      const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
+      return doneIds
+      // try {
+      // } catch(err) {
+      //   // if ECONN REFUSED, just return the tmp deal
+      //   // err.response means any of fetch error
+      //   if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
+      //     return deal
+      //   }
+      //   throw err
+      // }
+    })
   }
 
-  findPendingDeal(_id) {
-    return _.find(this.pendingDeals, {_id})
+  insert(body) {
+    return this.transactions.insert(normalize(body))
   }
 
-
-
-  async createDeal(body) {
-    const deal = normalizeDeal(body)
-    deal.type = 'deal'
-    return await this._postQueue(deal)
-  }
-
-  async markArrive(dealId, itemKeys) {
-    const deal = _.find(this.pendingDeals, deal => deal._id === dealId)
-    if (deal) {
-      markArrive(deal, itemKeys)
-    } else {
-      const operation = {
-        type: 'markArrive',
-        dealId,
-        itemKeys,
-      }
-      return await this._postQueue(operation)
-    }
-  }
+  // async markArrive(dealId, itemKeys) {
+  //   const deal = _.find(this.pendingDeals, deal => deal._id === dealId)
+  //   if (deal) {
+  //     markArrive(deal, itemKeys)
+  //   } else {
+  //     const operation = {
+  //       type: 'markArrive',
+  //       dealId,
+  //       itemKeys,
+  //     }
+  //     return await this._postQueue(operation)
+  //   }
+  // }
 
   renderReceipt(pendingDeal) {
     // TODO get template from localStorage
@@ -101,7 +70,7 @@ export class Balanc {
   }
 
   receiptUrl({_id}) {
-    const pendingDeal = this.findPendingDeal(_id)
+    const pendingDeal = this.transactions.find({_id})
     if (pendingDeal) {
       if (!this.renderReceipt) throw new Error('no this.renderReceipt')
       const receiptDefinition = this.renderReceipt(pendingDeal)

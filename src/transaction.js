@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 
-export function normalizeDeal(deal) {
+export function normalize(deal) {
   if (!deal.createdAt) {
     deal.createdAt = new Date()
   }

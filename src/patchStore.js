@@ -3,12 +3,9 @@ import Collection from 'nedb-promise'
 
 export default function PatchCollection(options) {
   const coll = new Collection(options)
-  const nedbInstance = coll.nedb
 
   coll.operations = new Collection()
-  coll.operationNumber = 0
-
-
+  coll.operationId = 0
 
   // hack via nedb-promise
   Object.assign(coll, {
@@ -19,7 +16,7 @@ export default function PatchCollection(options) {
     },
 
     _insertOperation(fn, args) {
-      return coll.operations.insert({_id: coll.operationNumber++, fn, args})
+      return coll.operations.insert({_id: coll.operationId++, fn, args})
       .then(() => {
         // use promise to debounce
         if (this._promise) return
