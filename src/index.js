@@ -32,18 +32,23 @@ export class Balanc {
     this.transactions = patchStore()
     this.transactions.setHook(async operations => {
       // upload all pendingDeals
-      const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
-      return doneIds
-      // try {
-      // } catch(err) {
-      //   // if ECONN REFUSED, just return the tmp deal
-      //   // err.response means any of fetch error
-      //   if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
-      //     return deal
-      //   }
-      //   throw err
-      // }
+      try {
+        const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
+        return doneIds
+      } catch(err) {
+        // ECONNREFUSED = Cannot reach server
+        // Not Found = api is too old
+        if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
+          // console.warn(err)
+        } else {
+          throw err
+        }
+      }
     })
+  }
+
+  find(query) {
+    return this.transactions.find(query)
   }
 
   insert(body) {
