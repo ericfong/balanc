@@ -50,6 +50,9 @@ export class Balanc {
   find(query) {
     return this.exchanges.find(query)
   }
+  findOne(query) {
+    return this.exchanges.findOne(query)
+  }
 
   insert(body) {
     return this.exchanges.insert(normalize(body))
