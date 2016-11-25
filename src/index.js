@@ -3,7 +3,7 @@ import _ from 'lodash'
 import _fetch from 'isomorphic-fetch'
 
 import _package from '../package.json'
-import {normalize} from './transaction'
+import {normalize} from './model/exchange'
 import createPdf from './createPdf'
 import renderReceipt from './receipt'
 import patchStore from './patchStore'
@@ -29,8 +29,8 @@ export class Balanc {
     this.conf = defaultConfig
     this.config(config)
 
-    this.transactions = patchStore()
-    this.transactions.setHook(async operations => {
+    this.exchanges = patchStore()
+    this.exchanges.setHook(async operations => {
       // upload all pendingDeals
       try {
         const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
@@ -48,11 +48,11 @@ export class Balanc {
   }
 
   find(query) {
-    return this.transactions.find(query)
+    return this.exchanges.find(query)
   }
 
   insert(body) {
-    return this.transactions.insert(normalize(body))
+    return this.exchanges.insert(normalize(body))
   }
 
   // async markArrive(dealId, itemKeys) {
@@ -75,7 +75,7 @@ export class Balanc {
   }
 
   receiptUrl({_id}) {
-    const pendingDeal = this.transactions.find({_id})
+    const pendingDeal = this.exchanges.find({_id})
     if (pendingDeal) {
       if (!this.renderReceipt) throw new Error('no this.renderReceipt')
       const receiptDefinition = this.renderReceipt(pendingDeal)
