@@ -12,12 +12,12 @@
     "start": "cross-env BALANC_API=http://localhost:8008/v1 webpack-dev-server --config ./demo/webpack.config.js"
   },
   "dependencies": {
+    "ajv": "^4.9.0",
     "isomorphic-fetch": "^2.2.1",
-    "jiff": "^0.7.3",
     "lodash": "^4.16.4",
     "nedb-promise": "^2.0.0",
     "pdfmake": "^0.1.18",
-    "reget": "^0.7.1"
+    "shortid": "^2.2.6"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
