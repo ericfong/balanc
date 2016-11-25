@@ -17,12 +17,17 @@ export default function PatchCollection(options) {
 
     _insertOperation(fn, args) {
       return coll.operations.insert({_id: coll.operationId++, fn, args})
-      .then(() => {
-        // use promise to debounce
-        if (this._promise) return
+      .then(() => this.flushOperations())
+    },
+
+    flushOperations() {
+      // use promise to debounce
+      if (!this._promise) {
+        let finalRet
         this._promise = coll.operations.find({})
         .then(ops => this.hook(ops))
         .then(doneOpIds => {
+          finalRet = doneOpIds
           if (doneOpIds) {
             return this.__update({
               _id: {$in: doneOpIds},
@@ -33,8 +38,12 @@ export default function PatchCollection(options) {
             })
           }
         })
-        .then(() => this._promise = null)
-      })
+        .then(() => {
+          this._promise = null
+          return finalRet
+        })
+      }
+      return this._promise
     },
 
     __insert: coll.insert,
