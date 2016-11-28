@@ -29,7 +29,7 @@ export class Balanc {
     this.conf = defaultConfig
     this.config(config)
 
-    this.exchanges = patchStore()
+    this.exchanges = patchStore({filename: 'exchanges', autoload: true})
     this.exchanges.setHook(async operations => {
       // upload all pendingDeals
       try {

@@ -1,10 +1,13 @@
 import Collection from 'nedb-promise'
 
 
-export default function PatchCollection(options) {
+export default function PatchCollection(options = {}) {
   const coll = new Collection(options)
 
-  coll.operations = new Collection()
+  coll.operations = new Collection({
+    ...options,
+    filename: options.filename + '.ops',
+  })
   coll.operationId = 0
 
   // hack via nedb-promise
