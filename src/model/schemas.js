@@ -1,5 +1,5 @@
 
-export default {
+export const transferSchema =  {
   required: ['domain', 'from', 'to', 'price', 'item'],
   properties: {
     // from, to
@@ -39,5 +39,13 @@ export default {
     // expireAt: {type: 'object', format: 'date'},    // default auto remove unless domain have been paid
   },
   type: 'object',
+  additionalProperties: false,
+}
+
+
+export const exchangeSchema = {
+  properties: {
+    transfers: {type: 'array', items: transferSchema},
+  },
   additionalProperties: false,
 }

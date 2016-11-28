@@ -1,14 +1,10 @@
 import _ from 'lodash'
-import Ajv from 'ajv'
 import shortid from 'shortid'
 
-import transferSchema from './transferSchema'
-import exchangeSchema from './exchangeSchema'
+import {validateExchange} from './validators'
+import {transferSchema} from './schemas'
 
 const transferCarryDownFields = [...transferSchema.required, 'number', 'tmpNumber', 'isPending']
-
-const ajv = new Ajv()
-const validateExchange = ajv.compile(exchangeSchema)
 
 
 function normalizeTransfer(transfer, lastTransfer) {
