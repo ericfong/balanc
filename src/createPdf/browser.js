@@ -2,8 +2,8 @@
 
 // use webpack to embed pdfmake
 /* eslint-disable */
-require('script!../../bower_components/pdfmake/build/pdfmake.js')
-require('script!../../bower_components/pdfmake/build/vfs_fonts.js')
+require('script-loader!../../bower_components/pdfmake/build/pdfmake.js')
+require('script-loader!../../bower_components/pdfmake/build/vfs_fonts.js')
 /* eslint-enable */
 
 
