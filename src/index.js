@@ -25,25 +25,15 @@ const ctxFields = Object.keys(defaultConfig)
 
 export class Balanc {
 
-  constructor(config) {
+  constructor(config = {}) {
     this.conf = defaultConfig
     this.config(config)
 
-    this.exchanges = patchStore({filename: 'exchanges', autoload: true})
+    this.exchanges = patchStore({filename: 'nedb/exchanges', autoload: true, disabledAutoFlush: config.disabledAutoFlush})
     this.exchanges.setHook(async operations => {
       // upload all pendingDeals
-      try {
-        const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
-        return doneIds
-      } catch(err) {
-        // ECONNREFUSED = Cannot reach server
-        // Not Found = api is too old
-        if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
-          // console.warn(err)
-        } else {
-          throw err
-        }
-      }
+      const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
+      return doneIds
     })
   }
 

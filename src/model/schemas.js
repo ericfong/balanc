@@ -3,7 +3,7 @@ export const transferSchema =  {
   required: ['from', 'to', 'price', 'item'],
   properties: {
     // from, to
-    // domain: {type: 'string'},     // for calc usage by domain
+    domain: {type: 'string'},     // for calc usage by domain
     from: {type: 'string'},       // email, tel(e164), email|tel/name
     to: {type: 'string'},
 

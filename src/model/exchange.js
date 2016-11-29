@@ -4,7 +4,7 @@ import shortid from 'shortid'
 import {validateExchange} from './validators'
 import {transferSchema} from './schemas'
 
-const transferCarryDownFields = [...transferSchema.required, 'number', 'tmpNumber', 'isPending']
+const transferCarryDownFields = [...transferSchema.required, 'domain', 'number', 'tmpNumber', 'isPending']
 
 
 function normalizeTransfer(transfer, lastTransfer) {

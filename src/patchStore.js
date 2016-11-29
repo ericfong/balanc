@@ -1,14 +1,19 @@
 import Collection from 'nedb-promise'
 
 
-export default function PatchCollection(options = {}) {
-  const coll = new Collection(options)
+export default function PatchCollection({filename, autoload, disabledAutoFlush} = {}) {
+  const coll = new Collection({
+    filename,
+    autoload,
+  })
 
   coll.operations = new Collection({
-    ...options,
-    filename: options.filename + '.ops',
+    filename: filename + '.ops',
+    autoload,
   })
   coll.operationId = 0
+
+  coll.disabledAutoFlush = disabledAutoFlush
 
   // hack via nedb-promise
   Object.assign(coll, {
@@ -19,8 +24,15 @@ export default function PatchCollection(options = {}) {
     },
 
     _insertOperation(fn, args) {
-      return coll.operations.insert({_id: coll.operationId++, fn, args})
-      .then(() => this.flushOperations())
+      const p = coll.operations.insert({_id: coll.operationId++, fn, args})
+      if (!coll.disabledAutoFlush) {
+        p.then(() => this.flushOperations())
+      }
+      return p
+    },
+
+    flushWait() {
+      return this._promise
     },
 
     flushOperations() {
@@ -40,6 +52,16 @@ export default function PatchCollection(options = {}) {
               },
             })
           }
+        })
+        .catch(err => {
+          // ECONNREFUSED = Cannot reach server
+          // Not Found = api is too old
+          if (err.code === 'ECONNREFUSED' || err.message === 'Not Found' || err.response) {
+            // console.warn(err)
+          } else {
+            console.error(err)
+          }
+          finalRet = err instanceof Error ? err : new Error(err)
         })
         .then(() => {
           this._promise = null
