@@ -32,11 +32,22 @@ function normalizeTransfer(transfer, lastTransfer) {
   return transfer
 }
 
+// global increment only number
+let _lastNumber
+function genTmpNumber() {
+  let id = Date.now()
+  if (id === _lastNumber) id ++
+  _lastNumber = id
+  return id
+}
+
 export function normalize(exchange) {
   const transfers = exchange.transfers
   for (let i = 0, ii = transfers.length; i < ii; i++) {
     transfers[i] = normalizeTransfer(transfers[i], transfers[i - 1])
   }
+
+  exchange.tmpNumber = genTmpNumber()
 
   if (!validateExchange(exchange)) {
     console.error('SchemaError:', validateExchange.errors)

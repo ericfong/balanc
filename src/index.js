@@ -32,8 +32,8 @@ export class Balanc {
     this.exchanges = patchStore({filename: 'nedb/exchanges', autoload: true, disabledAutoFlush: config.disabledAutoFlush})
     this.exchanges.setHook(async operations => {
       // upload all pendingDeals
-      const {doneIds} = await this.fetch({method: 'POST', url: 'batch', body: {operations}})
-      return doneIds
+      const {postedIds} = await this.fetch({method: 'POST', url: 'operations', body: {operations}})
+      return postedIds
     })
   }
 
@@ -48,19 +48,11 @@ export class Balanc {
     return this.exchanges.insert(normalize(body))
   }
 
-  // async markArrive(dealId, itemKeys) {
-  //   const deal = _.find(this.pendingDeals, deal => deal._id === dealId)
-  //   if (deal) {
-  //     markArrive(deal, itemKeys)
-  //   } else {
-  //     const operation = {
-  //       type: 'markArrive',
-  //       dealId,
-  //       itemKeys,
-  //     }
-  //     return await this._postQueue(operation)
-  //   }
-  // }
+  updateById(id, update, options) {
+    // TODO only allow $set in some fields
+    // TODO only allow push in transfers
+    return this.exchanges.updateById(id, update, options)
+  }
 
   renderReceipt(pendingDeal) {
     // TODO get template from localStorage

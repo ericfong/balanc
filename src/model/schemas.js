@@ -3,13 +3,8 @@ export const transferSchema =  {
   required: ['from', 'to', 'price', 'item'],
   properties: {
     // from, to
-    domain: {type: 'string'},     // for calc usage by domain
     from: {type: 'string'},       // email, tel(e164), email|tel/name
     to: {type: 'string'},
-
-    // parent exchange number
-    tmpNumber: {type: 'string'},
-    number: {type: 'string'},
 
     // data
     price: {type: 'number'},
@@ -25,10 +20,10 @@ export const transferSchema =  {
     settledAt: {type: 'object', format: 'date'},  // ALL transfers for this exchange have been delivered
 
     // timestamp
-    tmpAt: {type: 'object', format: 'date'},
-    createdAt: {type: 'object', format: 'date'},
-    updatedAt: {type: 'object', format: 'date'},
-    removedAt: {type: 'object', format: 'date'},
+    // tmpAt: {type: 'object', format: 'date'},
+    // createdAt: {type: 'object', format: 'date'},
+    // updatedAt: {type: 'object', format: 'date'},
+    // removedAt: {type: 'object', format: 'date'},
 
     // replace a transfer
     version: {type: 'number', default: 0},      // version for this transfer
@@ -46,6 +41,11 @@ export const transferSchema =  {
 export const exchangeSchema = {
   properties: {
     transfers: {type: 'array', items: transferSchema},
+
+    // domain: {type: 'string'},     // for calc usage by domain
+    // parent exchange number
+    tmpNumber: {type: 'number'},
+    // number: {type: 'string'},
   },
   additionalProperties: false,
 }

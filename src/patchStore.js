@@ -23,8 +23,10 @@ export default function PatchCollection({filename, autoload, disabledAutoFlush} 
       this.hook = hook
     },
 
-    _insertOperation(fn, args) {
-      const p = coll.operations.insert({_id: coll.operationId++, fn, args})
+    _insertOperation(operation) {
+      operation._id = coll.operationId++
+      operation.createdAt  = new Date()
+      const p = coll.operations.insert(operation)
       if (!coll.disabledAutoFlush) {
         p.then(() => this.flushOperations())
       }
@@ -41,14 +43,14 @@ export default function PatchCollection({filename, autoload, disabledAutoFlush} 
         let finalRet
         this._promise = coll.operations.find({})
         .then(ops => this.hook(ops))
-        .then(doneOpIds => {
-          finalRet = doneOpIds
-          if (doneOpIds) {
+        .then(postedIds => {
+          finalRet = postedIds
+          if (postedIds) {
             return this.__update({
-              _id: {$in: doneOpIds},
+              _id: {$in: postedIds},
             }, {
               $set: {
-                doneAt: new Date(),
+                postedAt: new Date(),
               },
             })
           }
@@ -73,19 +75,23 @@ export default function PatchCollection({filename, autoload, disabledAutoFlush} 
 
     __insert: coll.insert,
     insert(newDoc) {
-      return this._insertOperation('insert', [newDoc])
+      return this._insertOperation({op: 'insert', insert: newDoc})
       .then(() => this.__insert(newDoc))
     },
 
     __update: coll.update,
-    update(query, updateQuery, options) {
-      return this._insertOperation('update', [query, updateQuery, options])
-      .then(() => this.__update(query, updateQuery, options))
+    update(query, update, options) {
+      return this._insertOperation({op: 'update', query, update, options})
+      .then(() => this.__update(query, update, options))
+    },
+    updateById(updateId, update, options) {
+      return this._insertOperation({op: 'updateById', updateId, update, options})
+      .then(() => this.__update({_id: updateId}, update, options))
     },
 
     __remove: coll.remove,
     remove(query, options) {
-      return this._insertOperation('remove', [query, options])
+      return this._insertOperation({op: 'remove', query, options})
       .then(() => this.__remove(query, options))
     },
   })
