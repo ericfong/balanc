@@ -1,6 +1,6 @@
 
 export const transferSchema =  {
-  required: ['from', 'to', 'price', 'unit'],
+  required: ['from', 'to', 'price', 'item'],
   properties: {
     // from, to
     // domain: {type: 'string'},     // for calc usage by domain
@@ -13,7 +13,7 @@ export const transferSchema =  {
 
     // data
     price: {type: 'number'},
-    unit: {type: 'string'},
+    item: {type: 'string'},
     quantity: {type: 'number', default: 1},
     // extra
     description: {type: 'string'},
