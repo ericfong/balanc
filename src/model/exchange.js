@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import shortid from 'shortid'
+// import shortid from 'shortid'
 
 import {validateExchange} from './validators'
 import {transferSchema} from './schemas'
@@ -15,9 +15,9 @@ function normalizeTransfer(transfer, lastTransfer) {
     quantity: 1,
     version: 0,
   })
-  if (!transfer.tmpNumber) {
-    transfer.tmpNumber = shortid.generate()
-  }
+  // if (!transfer.tmpNumber) {
+  //   transfer.tmpNumber = shortid.generate()
+  // }
   if (!transfer.tmpAt) {
     transfer.tmpAt = new Date()
   }
