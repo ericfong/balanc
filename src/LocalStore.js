@@ -1,79 +1,74 @@
-import Collection from 'nedb-promise'
+import _ from 'lodash'
+// import sethub from 'reget/lib/sethub'
+import {normalize, normalizeTransfer} from './model/exchange'
 
-export class LocalStore {
-  operationId = 0
-  disabledAutoFlush = false
+
+// persist records, flush
+export default class LocalStore {
 
   constructor() {
-    this.exchanges = new Collection({filename: 'nedb/exchanges', autoload: true})
-    this.operations = new Collection({filename: 'nedb/exchanges.ops', autoload: true})
+    this.operationId = 0
+    this.disabledAutoFlush = false
+    this.exchanges = {}
+    this.operations = []
   }
 
+  insertExchange(data) {
+    const newEx = normalize(data)
+    const exchangeId = newEx._id
+    this.exchanges[newEx._id] = newEx
 
-  insertExchange(newDoc) {
-    return this.exchanges.insert(newDoc)
-    .then(exchange => {
-      this._insertOperation({fn: 'insertExchange', exchangeId: exchange._id, exchange})
-      return exchange
-    })
+    this._addQueue({exchangeId, fn: 'insertExchange', exchange: newEx})
+    return newEx
   }
 
   setTransfer(exchangeId, transferIndex, set) {
-    return this.exchanges.update({_id: exchangeId}, {
-      $set: {
-        [`transfers.${transferIndex}`]: set,
-      },
-    })
-    .then(ret => {
-      this._insertOperation({fn: 'setTransfer', exchangeId, transferIndex, set})
-      return ret
-    })
+    const ex = this.exchanges[exchangeId]
+    Object.assign(ex.transfers[transferIndex], set)
+
+    this._addQueue({exchangeId, fn: 'setTransfer', transferIndex, set})
+    return ex
   }
 
   appendTransfers(exchangeId, transfers) {
-    return this.exchanges.update({_id: exchangeId}, Array.isArray(transfers) ? {$pushAll: transfers} : {$push: transfers})
-    .then(ret => {
-      this._insertOperation({fn: 'appendTransfers', exchangeId, transfers})
-      return ret
-    })
+    const ex = this.exchanges[exchangeId]
+    for (let i = 0, ii = transfers.length; i < ii; i++) {
+      transfers[i] = normalizeTransfer(transfers[i], transfers[i - 1] || ex.transfers[ex.transfers.length - 1])
+    }
+    ex.transfers = ex.transfers.concat(transfers)
+
+    this._addQueue({exchangeId, fn: 'appendTransfers', transfers})
+    return ex
   }
   // replaceTransfer
 
 
-
-  _insertOperation(operation) {
-    operation._id = this.operationId++
+  _addQueue(operation) {
+    operation._id = `${operation.exchangeId}-${this.operationId++}`
     operation.createdAt  = new Date()
-    const p = this.operations.insert(operation)
-    if (!this.disabledAutoFlush) {
-      p.then(() => this.flushOperations())
-    }
-    return p
+    this.operations.push(operation)
+
+    this.save()
+    this.flush()
   }
 
   doFlush(operations) {
     return this.fetch({method: 'POST', url: 'operations', body: {operations}})
-    .then(ret => {
-      return ret.postedIds
-    })
   }
 
   flush() {
     // use promise to debounce
     if (!this._promise) {
       let finalRet
-      this._promise = this.operations.find({})
-      .then(ops => this.doFlush(ops))
-      .then(postedIds => {
+      this._promise = this.doFlush(this.operations)
+      .then(({postedIds}) => {
         finalRet = postedIds
         if (postedIds) {
-          return this.__update({
-            _id: {$in: postedIds},
-          }, {
-            $set: {
-              postedAt: new Date(),
-            },
+          _.each(postedIds, postedId => {
+            const op = _.find(this.operations, {_id: postedId})
+            op.postedAt = new Date()
           })
+          this.save()
         }
       })
       .catch(err => {
@@ -94,7 +89,22 @@ export class LocalStore {
     return this._promise
   }
 
-  flushWait() {
+  waitFlush() {
     return this._promise
+  }
+
+
+  load() {
+    if (global.localStorage) {
+      const data = JSON.parse(localStorage.getItem('balanc'))
+      Object.assign(this, data)
+    }
+  }
+
+  save() {
+    if (global.localStorage) {
+      const data = JSON.stringify(this)
+      localStorage.setItem('balanc', data)
+    }
   }
 }
