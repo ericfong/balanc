@@ -17,6 +17,7 @@
     "lodash": "^4.16.4",
     "nedb-promise": "^2.0.0",
     "pdfmake": "^0.1.18",
+    "reget": "^0.10.1",
     "shortid": "^2.2.6"
   },
   "devDependencies": {
