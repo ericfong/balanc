@@ -8,7 +8,6 @@ export default class LocalStore {
 
   constructor() {
     this.operationId = 0
-    this.disabledAutoFlush = false
     this.exchanges = {}
     this.operations = []
   }
@@ -44,7 +43,7 @@ export default class LocalStore {
 
 
   _addQueue(operation) {
-    operation._id = `${operation.exchangeId}-${this.operationId++}`
+    operation._id = `${this.operationId++}-${operation.exchangeId}`
     operation.createdAt  = new Date()
     this.operations.push(operation)
 
@@ -59,13 +58,12 @@ export default class LocalStore {
   flush() {
     // use promise to debounce
     if (!this._promise) {
-      let finalRet
-      this._promise = this.doFlush(this.operations)
-      .then(({postedIds}) => {
-        finalRet = postedIds
-        if (postedIds) {
-          _.each(postedIds, postedId => {
-            const op = _.find(this.operations, {_id: postedId})
+      const ops = this.operations.slice()
+      let finalRet = ops
+      this._promise = this.doFlush(ops)
+      .then(({ok}) => {
+        if (ok) {
+          _.each(ops, op => {
             op.postedAt = new Date()
           })
           this.save()

@@ -35,6 +35,7 @@ export function normalize(exchange) {
   if (!exchange._id) {
     exchange._id = exchange.tmpNumber = genTmpNumber()
   }
+
   if (!exchange.tmpAt) {
     exchange.tmpAt = new Date()
   }

@@ -40,6 +40,8 @@ export const transferSchema =  {
 
 export const exchangeSchema = {
   properties: {
+    _id: {type: ['string', 'number']},
+
     transfers: {type: 'array', items: transferSchema},
 
     // domain: {type: 'string'},     // for calc usage by domain
