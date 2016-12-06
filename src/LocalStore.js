@@ -12,6 +12,10 @@ export default class LocalStore {
     this.operations = []
   }
 
+  getExchange(id) {
+    return id ? this.exchanges[id] : this.exchanges
+  }
+
   insertExchange(data) {
     const newEx = normalize(data)
     const exchangeId = newEx._id

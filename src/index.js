@@ -6,7 +6,7 @@ import _package from '../package.json'
 import {normalize} from './model/exchange'
 import createPdf from './createPdf'
 import renderReceipt from './receipt'
-import patchStore from './patchStore'
+import LocalStore from './LocalStore'
 
 
 const test = process.env.NODE_ENV === 'test'
@@ -23,35 +23,12 @@ const defaultConfig = {
 const ctxFields = Object.keys(defaultConfig)
 
 
-export class Balanc {
+export class Balanc extends LocalStore {
 
   constructor(config = {}) {
+    super()
     this.conf = defaultConfig
     this.config(config)
-
-    this.exchanges = patchStore({filename: 'nedb/exchanges', autoload: true, disabledAutoFlush: config.disabledAutoFlush})
-    this.exchanges.setHook(async operations => {
-      // upload all pendingDeals
-      const {postedIds} = await this.fetch({method: 'POST', url: 'operations', body: {operations}})
-      return postedIds
-    })
-  }
-
-  find(query) {
-    return this.exchanges.find(query)
-  }
-  findOne(query) {
-    return this.exchanges.findOne(query)
-  }
-
-  insert(body) {
-    return this.exchanges.insert(normalize(body))
-  }
-
-  updateById(id, update, options) {
-    // TODO only allow $set in some fields
-    // TODO only allow push in transfers
-    return this.exchanges.updateById(id, update, options)
   }
 
   renderReceipt(pendingDeal) {
