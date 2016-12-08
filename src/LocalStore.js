@@ -55,23 +55,27 @@ export default class LocalStore {
     this.flush()
   }
 
-  doFlush(operations) {
-    return this.fetch({method: 'POST', url: 'operations', body: {operations}})
+  doFlush(body) {
+    return this.fetch({method: 'POST', url: 'operation', body})
   }
 
   flush() {
     // use promise to debounce
     if (!this._promise) {
-      const ops = this.operations.slice()
-      let finalRet = ops
-      this._promise = this.doFlush(ops)
-      .then(({ok}) => {
-        if (ok) {
-          _.each(ops, op => {
+      const operations = this.operations.slice()
+      let finalRet
+      const body = {operations}
+
+      this._promise = this.doFlush(body)
+      .then(ret => {
+        if (ret.ok) {
+          _.each(operations, op => {
             op.postedAt = new Date()
           })
           this.save()
         }
+        // return both operations & http ret
+        finalRet = Object.assign(body, ret)
       })
       .catch(err => {
         // ECONNREFUSED = Cannot reach server
