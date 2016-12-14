@@ -33,8 +33,8 @@ export function normalize(exchange) {
   }
 
   if (!exchange._id) {
-    exchange.tmpNumber = genTmpNumber()
-    exchange._id = `tmp-${exchange.tmpNumber}`
+    const tmpNumber = genTmpNumber()
+    exchange._id = `tmp-${tmpNumber}`
   }
 
   if (!exchange.tmpAt) {

@@ -68,10 +68,23 @@ export default class LocalStore {
 
       this._promise = this.doFlush(body)
       .then(ret => {
-        if (ret.ok) {
+        if (ret && ret.ok) {
+          // set postedAt
           _.each(operations, op => {
             op.postedAt = new Date()
           })
+          // set doneAt
+          _.each(ret.doneIds, _id => {
+            _.find(operations, {_id}).doneAt = new Date()
+          })
+
+          // redirect exchanges
+          _.each(ret.newExchanges, (newEx, tmpId) => {
+            delete this.exchanges[tmpId]
+            this.exchanges[newEx._id] = newEx
+          })
+          // console.log(ret.newExchanges, this.exchanges)
+
           this.save()
         }
         // return both operations & http ret
