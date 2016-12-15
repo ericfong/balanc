@@ -141,6 +141,8 @@ export class Balanc extends LocalStore {
       ctx.body = typeof ctx.body === 'string' ? ctx.body : JSON.stringify(ctx.body)
     }
 
+    ctx.credentials = 'include'
+
     return _fetch(ctx.url, ctx)
     .then(response => {
       if (response.status >= 200 && response.status < 400) {
