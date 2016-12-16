@@ -1,6 +1,5 @@
 import _ from 'lodash'
-// import sethub from 'reget/lib/sethub'
-import {normalize, normalizeTransfer} from './model/exchange'
+import {normalizeExchange, normalizeTransfer} from './normalizer'
 
 
 // persist records, flush
@@ -17,7 +16,7 @@ export default class LocalStore {
   }
 
   insertExchange(data) {
-    const newEx = normalize(data)
+    const newEx = normalizeExchange(data)
     const exchangeId = newEx._id
     this.exchanges[newEx._id] = newEx
 

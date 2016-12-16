@@ -3,7 +3,6 @@ import _ from 'lodash'
 import _fetch from 'isomorphic-fetch'
 
 import _package from '../package.json'
-import {normalize} from './model/exchange'
 import createPdf from './createPdf'
 import renderReceipt from './receipt'
 import LocalStore from './LocalStore'

@@ -1,10 +1,7 @@
 import _ from 'lodash'
-import genTmpNumber from '../genTmpNumber'
+import genTmpNumber from './genTmpNumber'
 
-import {validateExchange} from './validators'
-import {transferSchema} from './schemas'
-
-const transferCarryDownFields = [...transferSchema.required, 'domain', 'number', 'tmpNumber', 'isPending']
+const transferCarryDownFields = ['from', 'to', 'price', 'item', 'domain', 'number', 'tmpNumber', 'isPending']
 
 
 export function normalizeTransfer(transfer, lastTransfer) {
@@ -26,7 +23,7 @@ export function normalizeTransfer(transfer, lastTransfer) {
   return transfer
 }
 
-export function normalize(exchange) {
+export function normalizeExchange(exchange) {
   const transfers = exchange.transfers
   for (let i = 0, ii = transfers.length; i < ii; i++) {
     transfers[i] = normalizeTransfer(transfers[i], transfers[i - 1])
@@ -39,10 +36,6 @@ export function normalize(exchange) {
 
   if (!exchange.tmpAt) {
     exchange.tmpAt = new Date()
-  }
-
-  if (!validateExchange(exchange)) {
-    console.error('SchemaError:', validateExchange.errors)
   }
 
   return exchange
